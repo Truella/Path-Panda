@@ -1,89 +1,96 @@
-"use client"
+'use client';
 
-import Link from "next/link"
-import { useState } from "react"
+import Link from 'next/link';
+import { useState } from 'react';
+import { Menu, X } from 'lucide-react';
 
 export default function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/about-us", label: "About Us" },
-    { href: "/docs", label: "Docs" },
-  ]
+    { href: '/', label: 'Home' },
+    { href: '/about-us', label: 'About Us' },
+    { href: '/docs', label: 'Docs' },
+  ];
 
   return (
-    <header className="bg-[#f9f7fe] sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Left: Logo */}
+    <header className="sticky top-0 z-50 bg-[#f9f7fe]/90 backdrop-blur-xl border-b border-white/30">
+      {/* Matches Hero's starting color exactly */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
+          {/* Logo */}
           <Link
             href="/"
-            className="flex items-center text-xl font-bold text-[#2d2d2f] hover:opacity-80 transition-opacity duration-300"
+            className="text-2xl font-black tracking-tight text-[#7a5e46]"
           >
-            🐼 PathPanda
+            PathPanda
           </Link>
 
-          {/* Center: Navigation Menu - Hidden on mobile */}
-          <nav className="hidden md:flex items-center gap-8">
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-10">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-[#2d2d2f] hover:underline hover:underline-offset-2 transition-all duration-300 font-medium"
+                className="text-[#2d2d2f]/70 font-medium text-lg tracking-wide transition-all duration-300 hover:text-[#7a5e46] hover:scale-110 origin-center"
               >
                 {link.label}
               </Link>
             ))}
           </nav>
 
-          {/* Right: Get Started Button */}
-          <div className="hidden md:flex">
+          {/* Desktop CTA – clean & minimal */}
+          <div className="hidden md:block">
             <Link
               href="/get-started"
-              className="bg-[#7a5e46] text-white px-6 py-2 rounded-lg font-medium hover:bg-[#6a4e36] transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-md"
+              className="px-8 py-4 bg-[#7a5e46] text-white font-semibold rounded-full transition-all duration-300 transform hover:bg-[#6b513b] hover:scale-105 shadow-lg hover:shadow-xl"
             >
               Get Started
             </Link>
           </div>
 
-          {/* Mobile Menu Toggle */}
+          {/* Mobile Toggle */}
+
           <button
-            className="md:hidden text-[#2d2d2f] hover:opacity-70 transition-opacity"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-3 rounded-lg hover:bg-[#7a5e46]/10 transition-colors"
             aria-label="Toggle menu"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            {mobileMenuOpen ? (
+              <X className="w-7 h-7 text-[#2d2d2f]" />
+            ) : (
+              <Menu className="w-7 h-7 text-[#2d2d2f]" />
+            )}
           </button>
         </div>
 
         {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <nav className="md:hidden pb-4 border-t border-[#e0dce8]">
-            <div className="flex flex-col gap-4 pt-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-[#2d2d2f] hover:text-[#7a5e46] transition-colors duration-300 font-medium"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              ))}
+        <div
+          className={`md:hidden transition-all duration-500 ease-out overflow-hidden ${
+            mobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          }`}
+        >
+          <nav className="py-6 space-y-5 border-t border-[#7a5e46]/10">
+            {navLinks.map((link) => (
               <Link
-                href="/get-started"
-                className="bg-[#7a5e46] text-white px-6 py-2 rounded-lg font-medium hover:bg-[#6a4e36] transition-all duration-300 text-center"
+                key={link.href}
+                href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
+                className="block text-xl font-medium text-[#2d2d2f]/70 hover:text-[#7a5e46] transition-colors"
               >
-                Get Started
+                {link.label}
               </Link>
-            </div>
+            ))}
+            <Link
+              href="/get-started"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block w-full mt-6 py-4 bg-[#7a5e46] text-white text-center font-semibold rounded-full hover:bg-[#6b513b] transition-all"
+            >
+              Get Started
+            </Link>
           </nav>
-        )}
+        </div>
       </div>
     </header>
-  )
+  );
 }
