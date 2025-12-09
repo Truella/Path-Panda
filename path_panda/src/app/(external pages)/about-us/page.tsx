@@ -1,9 +1,11 @@
-import React from 'react'
+import Hero from "./components/hero"
+import Mission from "./components/mission"
 
-export default function page() {
+export default function AboutUsPage() {
   return (
     <div>
-      This is the about us page.
+      <Hero />
+      <Mission />
     </div>
   )
 }
