@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { createClient } from '@/utils/supabase/client';
+import { supabase as supabaseInstance } from '../../../../db/supabaseClient';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
@@ -30,7 +30,7 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { register, handleSubmit, reset } = useForm<AuthFormData>();
-  const supabase = createClient();
+  const supabase = supabaseInstance;
   const router = useRouter();
 
   const handleAuth: SubmitHandler<AuthFormData> = async (data) => {
