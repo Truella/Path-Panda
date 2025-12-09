@@ -1,28 +1,34 @@
+"use client"
+
+import { useEffect, useState } from "react"
+
 export default function Hero() {
+  const tagline = "Show, dont tell. Building interactive tours, one step at a time"
+  const [typed, setTyped] = useState("")
+
+  useEffect(() => {
+    let index = 0
+    const interval = setInterval(() => {
+      setTyped(tagline.slice(0, index + 1))
+      index++
+      if (index === tagline.length) clearInterval(interval)
+    }, 80) // typing speed
+    return () => clearInterval(interval)
+  }, [])
+
   return (
-    <section className="bg-[#f9f7fe] py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 className="text-5xl font-bold text-[#2d2d2f] sm:text-6xl">
-          Welcome to PathPanda
-        </h1>
-        <p className="mt-4 text-lg text-[#2d2d2f]/80 sm:text-xl">
-          Show, don't tell. Build interactive tours that users actually complete!
-        </p>
-        <div className="mt-8 flex justify-center gap-4">
-          <a
-            href="/get-started"
-            className="bg-[#7a5e46] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#6a4e36] hover:scale-105 transition-all duration-300 shadow-sm hover:shadow-md"
-          >
-            Get Started
-          </a>
-          <a
-            href="/docs"
-            className="border border-[#7a5e46] text-[#7a5e46] px-6 py-3 rounded-lg font-medium hover:bg-[#7a5e46]/10 transition-all duration-300"
-          >
-            Learn More
-          </a>
-        </div>
-      </div>
+    <section className="relative bg-[#f9f7fe] py-32 text-center overflow-hidden">
+  
+      {/* Heading */}
+      <h1 className="text-6xl md:text-7xl font-extrabold text-[#2d2d2f] opacity-0 animate-fadeIn">
+        Welcome to <span className="text-[#7a5e46]">PathPanda</span>
+      </h1>
+
+      {/* Typing Tagline */}
+      <p className="mt-6 text-xl md:text-2xl text-[#2d2d2f]/80 font-medium min-h-10">
+        {typed}
+        <span className="animate-blink">|</span>
+      </p>
     </section>
   )
 }
