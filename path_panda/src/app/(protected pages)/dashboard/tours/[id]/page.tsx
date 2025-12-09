@@ -6,7 +6,7 @@ import { Plus, Trash2, Code } from "lucide-react"
 import { Sidebar } from "../../../../../../components/dashboard/sidebar"
 import { StepEditor } from "../../../../../../components/dashboard/step-editor"
 import { EmbedScriptModal } from "../../../../../../components/dashboard/embed-script-modal"
-import type { TourStep } from "../page"
+import type { TourStep } from "../../../../../../constants/mockTours"
 
 export default function TourEditorPage() {
   const params = useParams()
@@ -113,7 +113,7 @@ export default function TourEditorPage() {
                     key={step.id}
                     className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-emerald-300 transition"
                   >
-                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-600 text-white font-bold flex-shrink-0">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-600 text-white font-bold shrink-0">
                       {step.stepNumber}
                     </div>
                     <div className="flex-1 cursor-pointer min-w-0" onClick={() => setEditingStep(step)}>

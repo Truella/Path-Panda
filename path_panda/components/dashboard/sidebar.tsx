@@ -1,9 +1,15 @@
+'use client';
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type React from "react";
-import { Home, Map, BarChart, LogOut, Panda } from "lucide-react";
+import { Home, Map, LogOut, Panda } from "lucide-react";
 
 export function Sidebar() {
+  const pathname = usePathname(); // current path
+
   return (
-    <aside className="w-64 bg-gray-100 text-gray-900 flex flex-col">
+    <aside className="w-64 bg-gray-100 text-gray-900 flex flex-col border-r">
       {/* Logo */}
       <div className="p-7">
         <div className="flex items-center gap-2">
@@ -26,39 +32,40 @@ export function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 p-6 space-y-2">
-        {/* Overview */}
-        <NavItem icon={<Home className="w-5 h-5" />} label="Dashboard" active />
-        {/* Tours Management */}
-        <NavItem icon={<Map className="w-5 h-5" />} label="Tours" />
-        {/* Analytics */}
-        <NavItem icon={<BarChart className="w-5 h-5" />} label="Analytics" />
+        <NavItem href="/dashboard" icon={<Home className="w-5 h-5" />} label="Dashboard" currentPath={pathname} />
+        <NavItem href="/dashboard/tours" icon={<Map className="w-5 h-5" />} label="Tours" currentPath={pathname} />
       </nav>
 
       {/* Footer */}
       <div className="p-6 border-t border-gray-200 space-y-2">
-        <NavItem icon={<LogOut className="w-5 h-5" />} label="Logout" />
+        <NavItem href="/logout" icon={<LogOut className="w-5 h-5" />} label="Logout" currentPath={pathname} />
       </div>
     </aside>
   );
 }
 
 function NavItem({
+  href,
   icon,
   label,
-  active = false,
+  currentPath,
 }: {
+  href: string;
   icon: React.ReactNode;
   label: string;
-  active?: boolean;
+  currentPath: string;
 }) {
+  const isActive = currentPath === href;
+
   return (
-    <button
+    <Link
+      href={href}
       className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${
-        active ? "bg-amber-700 text-white" : "text-gray-700 hover:bg-gray-200"
+        isActive ? "bg-amber-700 text-white" : "text-gray-700 hover:bg-gray-200"
       }`}
     >
       {icon}
       <span className="font-medium">{label}</span>
-    </button>
+    </Link>
   );
 }
