@@ -52,8 +52,7 @@ export default function AuthPage() {
       setError(authError.message);
     } else {
       reset();
-      // On sign-up, Supabase sends a confirmation email.
-      // On successful sign-in, you would typically redirect.
+      
       const message = isSignIn
         ? 'Signed in successfully! Redirecting to dashboard.'
         : 'Account created successfully! Redirecting to dashboard.';
@@ -95,7 +94,7 @@ export default function AuthPage() {
             <p className="text-lg font-medium text-white/80">Your seamless user onboarding guide</p>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-2xl p-2 min-h-[560px]"> {/* Fixed height for consistent panel size */}
+          <div className="bg-white rounded-2xl shadow-2xl p-2 min-h-[560px]">
             {/* Tab Component */}
             <div className="flex bg-gray-100 rounded-xl">
               <button
@@ -117,7 +116,7 @@ export default function AuthPage() {
               <h2 className="text-3xl font-bold text-[#2d2d2f] mb-2">
                 {isSignIn ? 'Welcome Back!' : 'Create an Account'}
               </h2>
-              <p className="text-[#2d2d2f] mb-6"> {/* Changed from text-gray-500 */}
+              <p className="text-[#2d2d2f] mb-6"> 
                 {isSignIn ? 'Sign in to continue your journey' : 'Get started in just a few steps'}
               </p>
 
@@ -129,27 +128,27 @@ export default function AuthPage() {
 
               <form onSubmit={handleSubmit(handleAuth)}>
                 <div className="mb-4">
-                  <label className="block text-[#2d2d2f] text-sm font-bold mb-2" htmlFor="email"> {/* Changed from text-gray-700 */}
+                  <label className="block text-[#2d2d2f] text-sm font-bold mb-2" htmlFor="email"> 
                     Email Address
                   </label>
                   <input
                     id="email"
                     type="email"
                     placeholder="you@example.com"
-                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:border-[#7a5e46] text-[#2d2d2f] placeholder-[#2d2d2f]/70" // Changed text and placeholder color
+                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:border-[#7a5e46] text-[#2d2d2f] placeholder-[#2d2d2f]/70" 
                     {...register('email', { required: true })}
                   />
                 </div>
 
                 <div className="mb-4">
-                  <label className="block text-[#2d2d2f] text-sm font-bold mb-2" htmlFor="password"> {/* Changed from text-gray-700 */}
+                  <label className="block text-[#2d2d2f] text-sm font-bold mb-2" htmlFor="password"> 
                     Password
                   </label>
                   <input
                     id="password"
                     type="password"
                     placeholder="••••••••"
-                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:border-[#7a5e46] text-[#2d2d2f] placeholder-[#2d2d2f]/70" // Changed text and placeholder color
+                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:border-[#7a5e46] text-[#2d2d2f] placeholder-[#2d2d2f]/70" 
                     {...register('password', { required: true, minLength: 6 })}
                   />
                 </div>
@@ -172,7 +171,7 @@ export default function AuthPage() {
 
                 <div className="my-6 flex items-center">
                   <div className="flex-grow border-t border-gray-300"></div>
-                  <span className="mx-4 text-xs text-[#2d2d2f]">OR</span> {/* Changed from text-gray-400 */}
+                  <span className="mx-4 text-xs text-[#2d2d2f]">OR</span> 
                   <div className="flex-grow border-t border-gray-300"></div>
                 </div>
                 
@@ -183,7 +182,7 @@ export default function AuthPage() {
                   disabled={loading}
                 >
                   <Image src="/icons/google.svg" alt="Google icon" width={20} height={20} />
-                  <span className="font-semibold text-[#2d2d2f]">{isSignIn ? 'Sign In with Google' : 'Sign Up with Google'}</span> {/* Changed from text-gray-700 */}
+                  <span className="font-semibold text-[#2d2d2f]">{isSignIn ? 'Sign In with Google' : 'Sign Up with Google'}</span> 
                 </button>
               </form>
             </div>

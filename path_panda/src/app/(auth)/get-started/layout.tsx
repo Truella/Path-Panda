@@ -1,4 +1,4 @@
-import '../../globals.css'; // Import global CSS relative to app directory
+import '../../globals.css';
 
 export default function AuthLayout({
   children,
