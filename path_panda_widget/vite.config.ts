@@ -1,6 +1,20 @@
 import { defineConfig } from "vite";
-import tailwindcss from "@tailwindcss/vite";
+import { resolve } from "path";
 
 export default defineConfig({
-	plugins: [tailwindcss()],
+	build: {
+		lib: {
+			entry: resolve(__dirname, "src/main.ts"),
+			name: "PathPandaWidget",
+			fileName: "widget",
+			formats: ["iife"],
+		},
+		outDir: "dist",
+		target: "es2019",
+		rollupOptions: {
+			output: {
+				inlineDynamicImports: true,
+			},
+		},
+	},
 });

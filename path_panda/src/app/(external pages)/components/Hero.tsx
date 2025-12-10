@@ -23,7 +23,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative min-h-screen max-h-[1200] flex items-center justify-center overflow-hidden bg-linear-to-br from-[#f9f7fe] via-[#fef9f5] to-[#faf4ed]">
+    <section className="relative min-h-[70vh] lg:min-h-[65vh] flex items-center justify-center overflow-hidden bg-linear-to-br from-[#f9f7fe] via-[#fef9f5] to-[#faf4ed]">
       <div className="absolute inset-0">
         <div className="absolute top-20 left-10 w-72 h-72 bg-[#7a5e46]/5 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-32 right-20 w-96 h-96 bg-[#d4a574]/10 rounded-full blur-3xl animate-pulse delay-1000" />
@@ -31,7 +31,7 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
-        <h1 className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tight">
+<h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight">
           <span className="block text-[#555557] font-extrabold opacity-0 translate-y-8 animate-reveal delay-200">
             Welcome to
           </span>
@@ -40,33 +40,33 @@ export default function Hero() {
           </span>
         </h1>
 
-        <div className="mt-10 text-xl md:text-2xl lg:text-3xl font-medium text-[#2d2d2f]/80 min-h-20">
+        <div className="mt-6 text-lg md:text-xl lg:text-2xl font-medium text-[#2d2d2f]/80 ">
           <p className="inline-block">
             {typed}
             <span className="inline-block w-1 h-8 bg-[#7a5e46] animate-blink ml-1 align-middle" />
           </p>
         </div>
         <div
-          className={`mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center transition-all duration-1000 ${
+          className={`mt-4 flex flex-col sm:flex-row gap-4 justify-center items-center transition-all duration-1000 ${
             showCTA ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}
         >
           <Link href="/get-started" passHref>
-            <button className="group px-8 py-5 bg-[#7a5e46] text-white font-semibold text-lg rounded-full hover:bg-[#6b513b] transition-all duration-300 shadow-xl hover:shadow-2xl flex items-center gap-3 hover:gap-5">
-            Try the Live Demo
+            <button className="group px-6 py-3 bg-[#7a5e46] text-white font-semibold text-base rounded-full hover:bg-[#6b513b] transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2.5 hover:gap-4">
+              Try the Live Demo
               <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
             </button>
           </Link>
 
           <Link href="/docs" passHref>
-            <button className="px-8 py-5 border-2 border-[#7a5e46] text-[#7a5e46] font-semibold text-lg rounded-full hover:bg-[#7a5e46]/5 transition-all duration-300 flex items-center gap-3">
+            <button className="px-6 py-3 border-2 border-[#7a5e46] text-[#7a5e46] font-semibold text-base rounded-full hover:bg-[#7a5e46]/5 transition-all duration-300 flex items-center gap-2.5">
               <Sparkles className="w-5 h-5" />
               Read the Docs
             </button>
           </Link>
         </div>
         <p
-          className={`mt-16 text-[#2d2d2f]/60 text-sm tracking-wider opacity-0 animate-fadeIn delay-1000 ${
+          className={`mt-8 text-[#2d2d2f]/60 text-sm tracking-wider opacity-0 animate-fadeIn delay-1000 ${
             showCTA ? 'animate-fadeIn' : ''
           }`}
         >

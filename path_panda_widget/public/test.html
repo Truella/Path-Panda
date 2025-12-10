@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>FitTrack - Your Personal Fitness Companion</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			body {
+				font-family: 'Helvetica Neue', Arial, sans-serif;
+				line-height: 1.6;
+				color: #2d2d2d;
+				background-color: #fafafa;
+			}
+
+			/* Header */
+			header {
+				background: #1a1a1a;
+				color: white;
+				padding: 1rem 0;
+				position: fixed;
+				width: 100%;
+				top: 0;
+				z-index: 1000;
+				box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+			}
+
+			.header-container {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 0 2rem;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+			.logo {
+				font-size: 1.5rem;
+				font-weight: bold;
+				color: #ffffff;
+			}
+
+			.nav-menu {
+				display: flex;
+				gap: 2rem;
+				list-style: none;
+				align-items: center;
+			}
+
+			.nav-menu a {
+				color: #e0e0e0;
+				text-decoration: none;
+				transition: color 0.3s;
+			}
+
+			.nav-menu a:hover {
+				color: #ffffff;
+			}
+
+			.login-btn {
+				background: transparent;
+				border: 2px solid #ffffff;
+				color: #ffffff;
+				padding: 0.6rem 1.5rem;
+				border-radius: 25px;
+				cursor: pointer;
+				font-weight: 600;
+				transition: all 0.3s;
+			}
+
+			.login-btn:hover {
+				background: #ffffff;
+				color: #1a1a1a;
+			}
+
+			/* Hero Section */
+			.hero {
+				background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+				color: white;
+				padding: 10rem 2rem 6rem;
+				text-align: center;
+				margin-top: 60px;
+			}
+
+			.hero h1 {
+				font-size: 3.5rem;
+				margin-bottom: 1.5rem;
+				line-height: 1.2;
+			}
+
+			.hero p {
+				font-size: 1.4rem;
+				margin-bottom: 3rem;
+				opacity: 0.9;
+				max-width: 700px;
+				margin-left: auto;
+				margin-right: auto;
+				color: #e0e0e0;
+			}
+
+			.hero-cta {
+				display: flex;
+				gap: 1.5rem;
+				justify-content: center;
+				flex-wrap: wrap;
+			}
+
+			.btn-large {
+				padding: 1.2rem 3rem;
+				font-size: 1.2rem;
+				border-radius: 50px;
+				border: none;
+				font-weight: bold;
+				cursor: pointer;
+				transition: all 0.3s;
+				text-decoration: none;
+				display: inline-block;
+			}
+
+			.btn-primary {
+				background: #1a1a1a;
+				color: white;
+				border: 2px solid #1a1a1a;
+				box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+			}
+
+			.btn-primary:hover {
+				background: #000000;
+				border-color: #000000;
+				transform: translateY(-3px);
+				box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+			}
+
+			.btn-outline {
+				background: transparent;
+				color: white;
+				border: 2px solid white;
+			}
+
+			.btn-outline:hover {
+				background: white;
+				color: #1a1a1a;
+			}
+
+			/* Features Grid */
+			.features {
+				padding: 6rem 2rem;
+				background: #ffffff;
+			}
+
+			.section-title {
+				text-align: center;
+				font-size: 2.5rem;
+				margin-bottom: 1rem;
+				color: #1a1a1a;
+			}
+
+			.section-subtitle {
+				text-align: center;
+				font-size: 1.2rem;
+				color: #666666;
+				margin-bottom: 4rem;
+				max-width: 600px;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			.features-grid {
+				max-width: 1200px;
+				margin: 0 auto;
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+				gap: 3rem;
+			}
+
+			.feature-box {
+				background: #fafafa;
+				padding: 2.5rem;
+				border-radius: 15px;
+				border: 1px solid #e0e0e0;
+				text-align: center;
+				transition: all 0.3s;
+			}
+
+			.feature-box:hover {
+				transform: translateY(-10px);
+				border-color: #1a1a1a;
+				box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+			}
+
+			.feature-icon {
+				font-size: 3.5rem;
+				margin-bottom: 1.5rem;
+				filter: grayscale(100%);
+			}
+
+			.feature-box h3 {
+				font-size: 1.5rem;
+				margin-bottom: 1rem;
+				color: #1a1a1a;
+			}
+
+			.feature-box p {
+				color: #666666;
+				line-height: 1.8;
+				margin-bottom: 1.5rem;
+			}
+
+			.feature-cta {
+				background: #2d2d2d;
+				color: white;
+				padding: 0.8rem 2rem;
+				border: none;
+				border-radius: 25px;
+				cursor: pointer;
+				font-weight: 600;
+				transition: all 0.3s;
+			}
+
+			.feature-cta:hover {
+				background: #1a1a1a;
+				transform: scale(1.05);
+			}
+
+			/* App Showcase */
+			.app-showcase {
+				padding: 6rem 2rem;
+				background: #f5f5f5;
+			}
+
+			.showcase-container {
+				max-width: 1200px;
+				margin: 0 auto;
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 4rem;
+				align-items: center;
+			}
+
+			.showcase-content h2 {
+				font-size: 2.8rem;
+				margin-bottom: 1.5rem;
+				color: #1a1a1a;
+			}
+
+			.showcase-content p {
+				font-size: 1.2rem;
+				color: #666666;
+				margin-bottom: 2rem;
+				line-height: 1.8;
+			}
+
+			.showcase-features {
+				list-style: none;
+				margin-bottom: 2.5rem;
+			}
+
+			.showcase-features li {
+				padding: 0.8rem 0;
+				font-size: 1.1rem;
+				color: #2d2d2d;
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+			}
+
+			.showcase-features li:before {
+				content: "✓";
+				background: #1a1a1a;
+				color: white;
+				width: 24px;
+				height: 24px;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-weight: bold;
+				font-size: 0.9rem;
+			}
+
+			.download-cta {
+				background: #1a1a1a;
+				color: white;
+				padding: 1rem 2.5rem;
+				border: none;
+				border-radius: 30px;
+				font-size: 1.1rem;
+				font-weight: bold;
+				cursor: pointer;
+				transition: all 0.3s;
+				box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+			}
+
+			.download-cta:hover {
+				background: #000000;
+				transform: translateY(-2px);
+				box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+			}
+
+			.app-mockup {
+				background: #2d2d2d;
+				padding: 3rem;
+				border-radius: 20px;
+				box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+			}
+
+			.mockup-screen {
+				background: white;
+				border-radius: 15px;
+				padding: 2rem;
+				min-height: 400px;
+			}
+
+			.mockup-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 2rem;
+				padding-bottom: 1rem;
+				border-bottom: 2px solid #e0e0e0;
+			}
+
+			.stat-item {
+				background: #fafafa;
+				padding: 1.5rem;
+				border-radius: 10px;
+				text-align: center;
+				margin-bottom: 1rem;
+				border: 1px solid #e0e0e0;
+			}
+
+			.stat-item h4 {
+				font-size: 2rem;
+				color: #1a1a1a;
+				margin-bottom: 0.5rem;
+			}
+
+			/* Pricing Section */
+			.pricing {
+				padding: 6rem 2rem;
+				background: #ffffff;
+			}
+
+			.pricing-container {
+				max-width: 1200px;
+				margin: 0 auto;
+			}
+
+			.pricing-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+				gap: 2rem;
+				margin-top: 3rem;
+			}
+
+			.pricing-card {
+				background: #fafafa;
+				padding: 3rem 2rem;
+				border-radius: 20px;
+				border: 2px solid #e0e0e0;
+				text-align: center;
+				transition: all 0.3s;
+				position: relative;
+			}
+
+			.pricing-card:hover {
+				transform: translateY(-10px);
+				border-color: #1a1a1a;
+				box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+			}
+
+			.pricing-card.featured {
+				background: #1a1a1a;
+				color: white;
+				border-color: #1a1a1a;
+				transform: scale(1.05);
+			}
+
+			.pricing-card.featured:hover {
+				transform: scale(1.08) translateY(-5px);
+			}
+
+			.popular-badge {
+				background: #2d2d2d;
+				color: white;
+				padding: 0.5rem 1.5rem;
+				border-radius: 20px;
+				font-size: 0.85rem;
+				font-weight: bold;
+				position: absolute;
+				top: -15px;
+				left: 50%;
+				transform: translateX(-50%);
+			}
+
+			.plan-name {
+				font-size: 1.5rem;
+				margin-bottom: 1rem;
+				font-weight: 600;
+			}
+
+			.plan-price {
+				font-size: 3rem;
+				font-weight: bold;
+				margin-bottom: 0.5rem;
+			}
+
+			.plan-price span {
+				font-size: 1.2rem;
+				opacity: 0.7;
+			}
+
+			.plan-description {
+				margin-bottom: 2rem;
+				opacity: 0.8;
+				color: #666666;
+			}
+
+			.pricing-card.featured .plan-description {
+				color: #e0e0e0;
+			}
+
+			.plan-features {
+				list-style: none;
+				margin-bottom: 2rem;
+				text-align: left;
+			}
+
+			.plan-features li {
+				padding: 0.8rem 0;
+				border-bottom: 1px solid #e0e0e0;
+			}
+
+			.pricing-card.featured .plan-features li {
+				border-bottom-color: rgba(255,255,255,0.2);
+			}
+
+			.plan-cta {
+				width: 100%;
+				padding: 1rem 2rem;
+				border: none;
+				border-radius: 30px;
+				font-size: 1rem;
+				font-weight: bold;
+				cursor: pointer;
+				transition: all 0.3s;
+			}
+
+			.pricing-card:not(.featured) .plan-cta {
+				background: #2d2d2d;
+				color: white;
+			}
+
+			.pricing-card:not(.featured) .plan-cta:hover {
+				background: #1a1a1a;
+				transform: scale(1.05);
+			}
+
+			.pricing-card.featured .plan-cta {
+				background: white;
+				color: #1a1a1a;
+			}
+
+			.pricing-card.featured .plan-cta:hover {
+				background: #f5f5f5;
+				transform: scale(1.05);
+			}
+
+			/* Testimonials */
+			.testimonials {
+				padding: 6rem 2rem;
+				background: #f5f5f5;
+			}
+
+			.testimonials-grid {
+				max-width: 1200px;
+				margin: 3rem auto 0;
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+				gap: 3rem;
+			}
+
+			.testimonial {
+				background: white;
+				padding: 2.5rem;
+				border-radius: 15px;
+				border: 1px solid #e0e0e0;
+			}
+
+			.stars {
+				color: #1a1a1a;
+				font-size: 1.3rem;
+				margin-bottom: 1rem;
+			}
+
+			.testimonial-text {
+				font-size: 1.1rem;
+				line-height: 1.8;
+				margin-bottom: 1.5rem;
+				color: #2d2d2d;
+			}
+
+			.testimonial-author {
+				font-weight: 600;
+				color: #1a1a1a;
+			}
+
+			/* Final CTA */
+			.final-cta {
+				padding: 8rem 2rem;
+				background: #1a1a1a;
+				color: white;
+				text-align: center;
+			}
+
+			.final-cta h2 {
+				font-size: 3rem;
+				margin-bottom: 1.5rem;
+			}
+
+			.final-cta p {
+				font-size: 1.3rem;
+				margin-bottom: 3rem;
+				opacity: 0.9;
+				color: #e0e0e0;
+			}
+
+			.final-cta-buttons {
+				display: flex;
+				gap: 2rem;
+				justify-content: center;
+				flex-wrap: wrap;
+			}
+
+			.start-trial-btn {
+				background: white;
+				color: #1a1a1a;
+				padding: 1.2rem 3rem;
+				border: none;
+				border-radius: 50px;
+				font-size: 1.2rem;
+				font-weight: bold;
+				cursor: pointer;
+				transition: all 0.3s;
+				box-shadow: 0 4px 15px rgba(255,255,255,0.2);
+			}
+
+			.start-trial-btn:hover {
+				background: #f5f5f5;
+				transform: translateY(-3px);
+				box-shadow: 0 6px 20px rgba(255,255,255,0.25);
+			}
+
+			.schedule-demo-btn {
+				background: transparent;
+				color: white;
+				padding: 1.2rem 3rem;
+				border: 2px solid white;
+				border-radius: 50px;
+				font-size: 1.2rem;
+				font-weight: bold;
+				cursor: pointer;
+				transition: all 0.3s;
+			}
+
+			.schedule-demo-btn:hover {
+				background: white;
+				color: #1a1a1a;
+			}
+
+			/* Footer */
+			footer {
+				background: #0a0a0a;
+				color: #e0e0e0;
+				padding: 4rem 2rem 2rem;
+			}
+
+			.footer-content {
+				max-width: 1200px;
+				margin: 0 auto;
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+				gap: 3rem;
+				margin-bottom: 2rem;
+			}
+
+			.footer-section h3 {
+				margin-bottom: 1rem;
+				color: #ffffff;
+			}
+
+			.footer-section ul {
+				list-style: none;
+			}
+
+			.footer-section a {
+				color: #a0a0a0;
+				text-decoration: none;
+				display: block;
+				margin: 0.5rem 0;
+				transition: color 0.3s;
+			}
+
+			.footer-section a:hover {
+				color: #ffffff;
+			}
+
+			.footer-bottom {
+				max-width: 1200px;
+				margin: 2rem auto 0;
+				padding-top: 2rem;
+				border-top: 1px solid #2d2d2d;
+				text-align: center;
+				color: #666666;
+			}
+
+			@media (max-width: 768px) {
+				.hero h1 {
+					font-size: 2.5rem;
+				}
+
+				.showcase-container {
+					grid-template-columns: 1fr;
+				}
+
+				.pricing-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Header -->
+		<header>
+			<div class="header-container">
+				<div class="logo">💪 FitTrack</div>
+				<ul class="nav-menu">
+					<li><a href="#features">Features</a></li>
+					<li><a href="#pricing">Pricing</a></li>
+					<li><a href="#testimonials">Reviews</a></li>
+					<li><button class="login-btn">Log In</button></li>
+				</ul>
+			</div>
+		</header>
+
+		<!-- Hero Section -->
+		<section class="hero">
+			<h1>Transform Your Fitness Journey</h1>
+			<p>Track workouts, monitor progress, and achieve your fitness goals with the most powerful fitness app available.</p>
+			<div class="hero-cta">
+				<button class="btn-large btn-primary first">Start Free Trial</button>
+				<button class="btn-large btn-outline">Watch Demo</button>
+			</div>
+		</section>
+
+		<!-- Features Section -->
+		<section class="features" id="features">
+			<h2 class="section-title">Everything You Need to Succeed</h2>
+			<p class="section-subtitle">Powerful features designed to help you reach your fitness goals faster</p>
+			<div class="features-grid">
+				<div class="feature-box">
+					<div class="feature-icon">📊</div>
+					<h3>Progress Tracking</h3>
+					<p>Visualize your fitness journey with detailed charts, graphs, and performance metrics.</p>
+					<button class="feature-cta second">Learn More</button>
+				</div>
+				<div class="feature-box">
+					<div class="feature-icon">🎯</div>
+					<h3>Goal Setting</h3>
+					<p>Set personalized goals and get AI-powered recommendations to achieve them faster.</p>
+					<button class="feature-cta">Learn More</button>
+				</div>
+				<div class="feature-box">
+					<div class="feature-icon">🏋️</div>
+					<h3>Workout Plans</h3>
+					<p>Access 1000+ workout plans designed by certified trainers for every fitness level.</p>
+					<button class="feature-cta">Learn More</button>
+				</div>
+				<div class="feature-box">
+					<div class="feature-icon">🥗</div>
+					<h3>Nutrition Guide</h3>
+					<p>Get personalized meal plans and track your nutrition to fuel your workouts.</p>
+					<button class="feature-cta">Learn More</button>
+				</div>
+				<div class="feature-box">
+					<div class="feature-icon">👥</div>
+					<h3>Community</h3>
+					<p>Connect with millions of fitness enthusiasts and find workout partners.</p>
+					<button class="feature-cta">Learn More</button>
+				</div>
+				<div class="feature-box">
+					<div class="feature-icon">⌚</div>
+					<h3>Wearable Sync</h3>
+					<p>Sync with Apple Watch, Fitbit, Garmin, and more for seamless tracking.</p>
+					<button class="feature-cta">Learn More</button>
+				</div>
+			</div>
+		</section>
+
+		<!-- App Showcase -->
+		<section class="app-showcase">
+			<div class="showcase-container">
+				<div class="showcase-content">
+					<h2>Your Pocket Personal Trainer</h2>
+					<p>Download the FitTrack app and take your workouts anywhere. Available on iOS and Android.</p>
+					<ul class="showcase-features">
+						<li>Offline workout mode</li>
+						<li>Real-time heart rate monitoring</li>
+						<li>Voice-guided exercises</li>
+						<li>Social sharing and challenges</li>
+					</ul>
+					<button class="download-cta third">Download Now</button>
+				</div>
+				<div class="app-mockup">
+					<div class="mockup-screen">
+						<div class="mockup-header">
+							<h3>Today's Activity</h3>
+							<span style="color: #1a1a1a; font-weight: 600;">Active</span>
+						</div>
+						<div class="stat-item">
+							<h4>12,847</h4>
+							<p>Steps Today</p>
+						</div>
+						<div class="stat-item">
+							<h4>542</h4>
+							<p>Calories Burned</p>
+						</div>
+						<div class="stat-item">
+							<h4>45 min</h4>
+							<p>Active Time</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Pricing Section -->
+		<section class="pricing" id="pricing">
+			<div class="pricing-container">
+				<h2 class="section-title">Choose Your Plan</h2>
+				<p class="section-subtitle">Start with a free trial, upgrade when you're ready</p>
+				<div class="pricing-grid">
+					<div class="pricing-card">
+						<div class="plan-name">Free</div>
+						<div class="plan-price">$0<span>/mo</span></div>
+						<p class="plan-description">Perfect for getting started</p>
+						<ul class="plan-features">
+							<li>✓ Basic workout tracking</li>
+							<li>✓ 50+ exercises</li>
+							<li>✓ Progress charts</li>
+							<li>✓ Community access</li>
+						</ul>
+						<button class="plan-cta">Get Started</button>
+					</div>
+					<div class="pricing-card featured">
+						<div class="popular-badge">MOST POPULAR</div>
+						<div class="plan-name">Pro</div>
+						<div class="plan-price">$9.99<span>/mo</span></div>
+						<p class="plan-description">For serious fitness enthusiasts</p>
+						<ul class="plan-features">
+							<li>✓ Everything in Free</li>
+							<li>✓ 1000+ workout plans</li>
+							<li>✓ Nutrition tracking</li>
+							<li>✓ AI recommendations</li>
+							<li>✓ Priority support</li>
+						</ul>
+						<button class="plan-cta fourth">Start Free Trial</button>
+					</div>
+					<div class="pricing-card">
+						<div class="plan-name">Team</div>
+						<div class="plan-price">$24.99<span>/mo</span></div>
+						<p class="plan-description">For trainers and groups</p>
+						<ul class="plan-features">
+							<li>✓ Everything in Pro</li>
+							<li>✓ Up to 10 members</li>
+							<li>✓ Team challenges</li>
+							<li>✓ Admin dashboard</li>
+							<li>✓ Custom branding</li>
+						</ul>
+						<button class="plan-cta">Contact Sales</button>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Testimonials -->
+		<section class="testimonials" id="testimonials">
+			<h2 class="section-title">What Our Users Say</h2>
+			<p class="section-subtitle">Join thousands of satisfied users who transformed their lives</p>
+			<div class="testimonials-grid">
+				<div class="testimonial">
+					<div class="stars">★★★★★</div>
+					<p class="testimonial-text">"FitTrack helped me lose 30 pounds in 4 months! The workout plans are amazing and the progress tracking keeps me motivated every day."</p>
+					<p class="testimonial-author">- Jessica M.</p>
+				</div>
+				<div class="testimonial">
+					<div class="stars">★★★★★</div>
+					<p class="testimonial-text">"As a personal trainer, I use FitTrack with all my clients. The team features make it easy to monitor their progress and adjust their programs."</p>
+					<p class="testimonial-author">- Marcus T.</p>
+				</div>
+				<div class="testimonial">
+					<div class="stars">★★★★★</div>
+					<p class="testimonial-text">"Best fitness app I've ever used. The nutrition tracking combined with workout plans is exactly what I needed. Highly recommend!"</p>
+					<p class="testimonial-author">- Sarah K.</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Final CTA -->
+		<section class="final-cta">
+			<h2>Ready to Start Your Journey?</h2>
+			<p>Join over 2 million users who are achieving their fitness goals with FitTrack</p>
+			<div class="final-cta-buttons">
+				<button class="start-trial-btn fifth">Start Your Free Trial</button>
+				<button class="schedule-demo-btn">Schedule a Demo</button>
+			</div>
+		</section>
+
+		<!-- Footer -->
+		<footer>
+			<div class="footer-content">
+				<div class="footer-section">
+					<h3>Product</h3>
+					<ul>
+						<li><a href="#">Features</a></li>
+						<li><a href="#">Pricing</a></li>
+						<li><a href="#">Mobile App</a></li>
+						<li><a href="#">Integrations</a></li>
+					</ul>
+				</div>
+				<div class="footer-section">
+					<h3>Company</h3>
+					<ul>
+						<li><a href="#">About Us</a></li>
+						<li><a href="#">Blog</a></li>
+						<li><a href="#">Careers</a></li>
+						<li><a href="#">Press</a></li>
+					</ul>
+				</div>
+				<div class="footer-section">
+					<h3>Resources</h3>
+					<ul>
+						<li><a href="#">Help Center</a></li>
+						<li><a href="#">Workout Library</a></li>
+						<li><a href="#">Nutrition Guides</a></li>
+						<li><a href="#">Community</a></li>
+					</ul>
+				</div>
+				<div class="footer-section">
+					<h3>Legal</h3>
+					<ul>
+						<li><a href="#">Privacy Policy</a></li>
+						<li><a href="#">Terms of Service</a></li>
+						<li><a href="#">Cookie Policy</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="footer-bottom">
+				<p>&copy; 2024 FitTrack. All rights reserved.</p>
+			</div>
+		</footer>
+
+		<!-- Your Tour Widget Script -->
+		<script
+			type="module"
+			src="/src/main.ts"
+			data-embed-key="4b8fdffb88f615f14a01d69d"
+		></script>
+	</body>
+</html>
