@@ -7,25 +7,27 @@ import { usePathname } from 'next/navigation';
 interface Heading {
   id: string;
   text: string;
-  tagName: string; // To differentiate between h2, h3, etc.
+  tagName: string;
 }
 
-export default function OnThisPageSidebar() {
+export default function OnThisPageSidebar({ onLinkClick }: { onLinkClick?: () => void }) {
   const [headings, setHeadings] = useState<Heading[]>([]);
   const pathname = usePathname();
 
   useEffect(() => {
-    // Wrap in a timeout to avoid synchronous setState error during render
+    
     const timeoutId = setTimeout(() => {
       const headingElements = Array.from(
-        document.querySelectorAll('main h2, main h3') // Query for h2 and h3
+        document.querySelectorAll('main h2, main h3') 
       ) as HTMLHeadingElement[];
 
-      const headingData = headingElements.map((heading) => ({
-        id: heading.id,
-        text: heading.innerText,
-        tagName: heading.tagName,
-      }));
+      const headingData = headingElements
+        .map((heading) => ({
+          id: heading.id,
+          text: heading.innerText,
+          tagName: heading.tagName,
+        }))
+        .filter((heading) => heading.text !== 'On This Page');
 
       setHeadings(headingData);
     }, 0);
@@ -34,15 +36,21 @@ export default function OnThisPageSidebar() {
   }, [pathname]);
 
   return (
-    <nav>
-        <h3 className="font-semibold text-lg mb-4 text-[#2d2d2f]">On This Page</h3>
-        <ul className="space-y-2">
+    <nav className="pt-4">
+        <h3 className="font-semibold text-lg mb-4 pl-2 text-[#2d2d2f]">On This Page</h3>
+        <ul className="space-y-2 border-l border-gray-200 ml-3">
             {headings.map((heading) => (
             <li key={heading.id}>
                 <Link
                   href={`#${heading.id}`}
-                  className={`block text-sm text-gray-500 hover:text-amber-700 transition-colors duration-200 ${
-                    heading.tagName === 'H3' ? 'ml-4' : '' 
+                  onClick={onLinkClick}
+                  className={`block px-3 py-1 text-sm transition-colors duration-200 -ml-[1px] ${
+                    heading.tagName === 'H3' ? 'ml-3' : '' 
+                  }
+                  ${
+                    window.location.hash === `#${heading.id}`
+                      ? 'text-amber-700 font-semibold border-l-4 border-amber-500' 
+                      : 'text-gray-600 hover:text-amber-700 hover:border-l-4 hover:border-gray-300' 
                   }`}
                 >
                     {heading.text}
