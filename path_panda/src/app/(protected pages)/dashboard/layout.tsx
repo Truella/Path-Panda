@@ -1,7 +1,10 @@
 import type React from "react"
 import { Poppins } from "next/font/google"
 import type { Metadata } from "next"
-import "./globals.css"
+import Providers from "@/app/providers"
+import "../../globals.css"
+import { Toaster } from "@/components/ui/sonner"
+
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -23,7 +26,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.className} font-sans antialiased`}>
-        {children}
+        <Providers>{children}</Providers>
+        <Toaster position="top-right" richColors />
       </body>
     </html>
   )

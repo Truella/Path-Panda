@@ -4,6 +4,7 @@ export interface TourStep {
   description: string
   selector: string
   stepNumber: number
+  position?: string
 }
 
 export interface Tour {
