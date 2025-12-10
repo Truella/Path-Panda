@@ -55,7 +55,7 @@ export default function CreateTourPage() {
         description: `"${newTour.title}" is ready for steps.`,
       });
 
-      router.push(`/dashboard/tours/${newTour.id}`);
+      router.push(`/dashboard/tours/${newTour.id}/edit`);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Failed to create tour';
@@ -141,13 +141,30 @@ export default function CreateTourPage() {
                   <label className="block text-sm font-semibold text-[#555557] mb-2 sm:mb-3">
                     Tour Name
                   </label>
+
                   <input
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="e.g., Product Walkthrough"
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 text-black placeholder-gray-400 text-sm sm:text-base"
                     disabled={createTourMutation.isPending}
+                    className={`
+      w-full
+      px-3 sm:px-4 py-2.5 sm:py-3
+      border border-gray-200
+      rounded-xl
+      bg-white
+      text-black text-sm sm:text-base
+      placeholder-gray-400
+      shadow-sm
+      transition-all
+      focus:outline-none
+      focus:ring-2 focus:ring-[#d4a574]
+      focus:border-[#d4a574]
+      hover:border-gray-300
+      disabled:opacity-50
+      disabled:cursor-not-allowed
+    `}
                   />
                 </div>
 
@@ -156,20 +173,40 @@ export default function CreateTourPage() {
                   <label className="block text-sm font-semibold text-[#555557] mb-2 sm:mb-3">
                     Description
                   </label>
+
                   <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     rows={4}
                     placeholder="Describe what this tour will guide users through..."
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 text-black placeholder-gray-400 text-sm sm:text-base resize-none"
                     disabled={createTourMutation.isPending}
+                    className={`
+      w-full
+      px-3 sm:px-4 py-2.5 sm:py-3
+      border border-gray-200
+      rounded-xl
+      bg-white
+      text-black text-sm sm:text-base
+      placeholder-gray-400
+      shadow-sm
+      transition-all
+      focus:outline-none
+      focus:ring-2 focus:ring-[#d4a574]
+      focus:border-[#d4a574]
+      hover:border-gray-300
+      disabled:opacity-50
+      disabled:cursor-not-allowed
+      resize-none
+    `}
                   />
                 </div>
 
                 {/* Error */}
                 {error && (
                   <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-lg">
-                    <p className="text-red-700 text-xs sm:text-sm font-medium">{error}</p>
+                    <p className="text-red-700 text-xs sm:text-sm font-medium">
+                      {error}
+                    </p>
                   </div>
                 )}
               </div>

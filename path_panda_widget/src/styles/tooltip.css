@@ -1,0 +1,57 @@
+.tour-tooltip {
+  position: fixed;
+  max-width: 320px;
+  background: white;
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  z-index: 99999;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity .20s ease, transform .20s ease;
+}
+
+.tour-tooltip.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.tour-tooltip-arrow {
+  width: 12px;
+  height: 12px;
+  background: white;
+  position: absolute;
+  transform: rotate(45deg);
+  box-shadow: 0 0 14px rgba(0,0,0,0.15);
+}
+
+.tour-tooltip-inner h3 {
+  margin: 0 0 6px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.tour-tooltip-inner p {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+}
+
+.tour-tooltip-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.tour-tooltip-actions button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: #111;
+  color: white;
+  font-size: 13px;
+}
+
+.tour-tooltip-actions button[data-skip] {
+  background: #bbb;
+  color: #222;
+}
