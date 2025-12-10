@@ -35,14 +35,40 @@ export default function Dashboard() {
     useAllTourAnalytics(tours);
 
   // Calculate aggregate stats from all tours
-  // MOCK STATS (replace the entire useMemo block)
-const stats = {
-  toursStarted: 124,
-  completed: 87,
-  skipped: 19,
-  completionRate: "70.2%",
-};
+  const stats = useMemo(() => {
+    if (!tourAnalyticsData) {
+      return {
+        toursStarted: 0,
+        completed: 0,
+        skipped: 0,
+        completionRate: '0.0%',
+      };
+    }
 
+    const totals = tourAnalyticsData.reduce(
+      (acc, item) => {
+        if (item.analytics) {
+          acc.toursStarted += item.analytics.totalSessions;
+          acc.completed += item.analytics.completedSessions;
+          acc.skipped += item.analytics.skippedSessions;
+        }
+        return acc;
+      },
+      { toursStarted: 0, completed: 0, skipped: 0 },
+    );
+
+    const completionRate =
+      totals.toursStarted > 0
+        ? ((totals.completed / totals.toursStarted) * 100).toFixed(1)
+        : '0.0';
+
+    return {
+      toursStarted: totals.toursStarted,
+      completed: totals.completed,
+      skipped: totals.skipped,
+      completionRate: `${completionRate}%`,
+    };
+  }, [tourAnalyticsData]);
 
   const handleDeleteTour = async (id: string, tourTitle: string) => {
     try {
