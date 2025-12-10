@@ -6,7 +6,10 @@ import { toast } from 'sonner';
 import type { TourStep } from '../../types/tour';
 
 // Define proper types for the modal props
-export type NewStepData = Omit<TourStep, 'id' | 'tour_id' | 'step_id' | 'created_at'>;
+export type NewStepData = Omit<
+  TourStep,
+  'id' | 'tour_id' | 'step_id' | 'created_at'
+>;
 
 interface BaseStepEditorModalProps {
   onClose: () => void;
@@ -14,7 +17,13 @@ interface BaseStepEditorModalProps {
 }
 
 interface NewStepEditorModalProps extends BaseStepEditorModalProps {
-  step: { title: string; content: string; selector: string; position: string; order: number };
+  step: {
+    title: string;
+    content: string;
+    selector: string;
+    position: string;
+    order: number;
+  };
   onSave: (step: NewStepData) => void;
   isNewStep: true;
 }
@@ -25,7 +34,9 @@ interface ExistingStepEditorModalProps extends BaseStepEditorModalProps {
   isNewStep?: false;
 }
 
-type StepEditorModalProps = NewStepEditorModalProps | ExistingStepEditorModalProps;
+type StepEditorModalProps =
+  | NewStepEditorModalProps
+  | ExistingStepEditorModalProps;
 
 export default function StepEditorModal({
   step,
@@ -81,10 +92,8 @@ export default function StepEditorModal({
   };
 
   return (
-    <div 
-      className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-    >
-      <div 
+    <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div
         className="bg-white rounded-xl shadow-xl w-full max-w-md sm:max-w-lg p-6 sm:p-8 border border-[#d4a574] max-h-[90vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
         onClick={(e) => e.stopPropagation()}
       >
@@ -100,13 +109,30 @@ export default function StepEditorModal({
             <label className="block text-sm font-semibold text-[#555557] mb-2 sm:mb-3">
               Title
             </label>
+
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., Welcome to Dashboard"
               disabled={isSaving}
-              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent text-black placeholder-gray-400 disabled:opacity-50 text-sm sm:text-base"
+              className={`
+      w-full
+      px-3 sm:px-4 py-2.5 sm:py-3
+      border border-gray-200
+      rounded-xl
+      bg-white
+      text-black text-sm sm:text-base
+      placeholder-gray-400
+      shadow-sm
+      transition-all
+      focus:outline-none
+      focus:ring-2 focus:ring-[#d4a574]
+      focus:border-[#d4a574]
+      hover:border-gray-300
+      disabled:opacity-50
+      disabled:cursor-not-allowed
+    `}
             />
           </div>
 
@@ -114,13 +140,31 @@ export default function StepEditorModal({
             <label className="block text-sm font-semibold text-[#555557] mb-2 sm:mb-3">
               Content
             </label>
+
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Describe what users will learn in this step..."
               rows={4}
               disabled={isSaving}
-              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent text-black placeholder-gray-400 disabled:opacity-50 text-sm sm:text-base resize-none"
+              className={`
+      w-full
+      px-3 sm:px-4 py-2.5 sm:py-3
+      border border-gray-200
+      rounded-xl
+      bg-white
+      text-black text-sm sm:text-base
+      placeholder-gray-400
+      shadow-sm
+      transition-all
+      focus:outline-none
+      focus:ring-2 focus:ring-[#d4a574]
+      focus:border-[#d4a574]
+      hover:border-gray-300
+      disabled:opacity-50
+      disabled:cursor-not-allowed
+      resize-none
+    `}
             />
           </div>
 
@@ -128,33 +172,86 @@ export default function StepEditorModal({
             <label className="block text-sm font-semibold text-[#555557] mb-2 sm:mb-3">
               Position
             </label>
-            <select
-              value={position}
-              onChange={(e) => setPosition(e.target.value)}
-              disabled={isSaving}
-              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent text-black disabled:opacity-50 text-sm sm:text-base"
-            >
-              <option value="top">Top</option>
-              <option value="bottom">Bottom</option>
-              <option value="left">Left</option>
-              <option value="right">Right</option>
-              <option value="center">Center</option>
-            </select>
+
+            <div className="relative">
+              <select
+                value={position}
+                onChange={(e) => setPosition(e.target.value)}
+                disabled={isSaving}
+                className={`
+        w-full appearance-none
+        px-3 sm:px-4 py-2.5 sm:py-3
+        border border-gray-200
+        rounded-xl
+        bg-white
+        text-black text-sm sm:text-base
+        shadow-sm
+        transition-all
+        focus:outline-none
+        focus:ring-2 focus:ring-[#d4a574]
+        focus:border-[#d4a574]
+        hover:border-gray-300
+        disabled:opacity-50
+        disabled:cursor-not-allowed
+      `}
+              >
+                <option value="top">Top</option>
+                <option value="bottom">Bottom</option>
+                <option value="left">Left</option>
+                <option value="right">Right</option>
+              </select>
+
+              {/* Chevron */}
+              <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </span>
+            </div>
           </div>
 
           <div>
             <label className="block text-sm font-semibold text-[#555557] mb-2 sm:mb-3">
               Target Element (CSS Selector)
             </label>
+
             <input
               type="text"
               value={selector}
               onChange={(e) => setSelector(e.target.value)}
               placeholder="e.g., #my-button, .nav-item"
               disabled={isSaving}
-              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent text-black placeholder-gray-400 text-xs sm:text-sm disabled:opacity-50"
+              className={`
+      w-full
+      px-3 sm:px-4 py-2.5 sm:py-3
+      border border-gray-200
+      rounded-xl
+      bg-white
+      text-black text-xs sm:text-sm
+      placeholder-gray-400
+      shadow-sm
+      transition-all
+      focus:outline-none
+      focus:ring-2 focus:ring-[#d4a574]
+      focus:border-[#d4a574]
+      hover:border-gray-300
+      disabled:opacity-50
+      disabled:cursor-not-allowed
+      font-mono
+    `}
             />
-            <p className="text-xs text-gray-500 mt-2">
+
+            <p className="mt-2 text-xs text-gray-500">
               Optional: Specify which element this step should highlight
             </p>
           </div>
@@ -178,8 +275,10 @@ export default function StepEditorModal({
                 <Loader2 className="w-4 h-4 animate-spin" />
                 {isNewStep ? 'Adding...' : 'Saving...'}
               </>
+            ) : isNewStep ? (
+              'Add Step'
             ) : (
-              isNewStep ? 'Add Step' : 'Save Step'
+              'Save Step'
             )}
           </button>
         </div>
