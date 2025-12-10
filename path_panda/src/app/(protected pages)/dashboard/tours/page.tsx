@@ -74,10 +74,12 @@ export default function ToursPage() {
       <main className="overflow-auto">
         {/* Page Header */}
         <div className="border-b border-gray-200">
-          <div className="flex items-center justify-between px-8 py-6">
-            <div>
-              <h1 className="text-2xl font-bold text-[#555557]">My Tours</h1>
-              <p className="bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] bg-clip-text text-transparent">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl sm:text-2xl font-bold text-[#555557] truncate">
+                My Tours
+              </h1>
+              <p className="bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] bg-clip-text text-transparent text-sm sm:text-base mt-1">
                 Create and manage your onboarding tours
                 {!isLoading &&
                   tours &&
@@ -86,12 +88,13 @@ export default function ToursPage() {
             </div>
             <button
               onClick={() => router.push('/dashboard/tours/new')}
-              className="flex items-center cursor-pointer gap-2 
+              className="flex items-center justify-center cursor-pointer gap-2 
              bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574]
              text-white px-4 py-2 rounded-lg 
-             hover:opacity-90 transition font-medium text-sm"
+             hover:opacity-90 transition font-medium text-sm whitespace-nowrap
+             w-full sm:w-auto"
             >
-              <Plus className="w-5 h-5" />
+              <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
               Create Tour
             </button>
           </div>
