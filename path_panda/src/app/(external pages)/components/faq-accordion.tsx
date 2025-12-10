@@ -44,7 +44,6 @@ export default function FAQ() {
   return (
     <section className="bg-linear-to-b from-white to-[#f9f7fe] py-24">
       <div className="max-w-4xl mx-auto px-6 lg:px-8">
-        {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-5xl md:text-6xl font-black text-[#2d2d2f]">
             Got Questions?
