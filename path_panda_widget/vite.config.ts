@@ -1,21 +1,29 @@
+import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 import { defineConfig } from "vite";
-import { resolve } from "path";
-
 export default defineConfig({
+    plugins: [cssInjectedByJsPlugin()],
 	build: {
 		lib: {
-			entry: resolve(__dirname, "src/main.ts"),
+			entry: "src/main.ts",
 			name: "PathPandaWidget",
-			fileName: "widget",
+			fileName: "PathPandaWidget",
 			formats: ["iife"],
 		},
-		outDir: "dist",
-		target: "es2019",
 		rollupOptions: {
 			output: {
+				entryFileNames: "PathPandaWidget.js",
+				assetFileNames: "PathPandaWidget.[ext]",
+				extend: true,
 				inlineDynamicImports: true,
 			},
 		},
+		minify: "terser",
 		cssCodeSplit: false,
+		terserOptions: {
+			compress: {
+				drop_console: true,
+				drop_debugger: true,
+			},
+		},
 	},
 });
