@@ -7,9 +7,14 @@ export default defineConfig({
 			entry: resolve(__dirname, "src/main.ts"),
 			name: "PathPandaWidget",
 			fileName: "widget",
-			formats: ["es", "umd"],
+			formats: ["iife"],
 		},
 		outDir: "dist",
 		target: "es2019",
+		rollupOptions: {
+			output: {
+				inlineDynamicImports: true,
+			},
+		},
 	},
 });
