@@ -1,4 +1,5 @@
 import type React from "react"
+
 export function StatsCard({
   title,
   value,
@@ -15,15 +16,36 @@ export function StatsCard({
   textColor: string
 }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 hover:border-gray-300 transition">
+    <div className="bg-linear-to-br from-[#f9f7fe] via-[#fef9f5] to-[#faf4ed] 
+        rounded-xl border border-[#d4a574]/40 
+        p-5 transition hover:shadow-md hover:border-[#d4a574]">
+      
+      {/* Top section */}
       <div className="flex items-start justify-between mb-4">
+
+        {/* Text */}
         <div>
-          <p className="text-gray-600 text-sm font-medium">{title}</p>
-          <p className="text-4xl font-bold text-gray-900 mt-2">{value}</p>
+          <p className="text-[#555557] text-xs font-medium uppercase tracking-wide">
+            {title}
+          </p>
+
+          {/* Value */}
+          <p className="text-3xl font-bold text-black mt-3">
+            {value}
+          </p>
         </div>
-        <div className={`${bgColor} ${textColor} p-3 rounded-lg`}>{icon}</div>
+
+        {/* Icon container (styled) */}
+        <div className={`${bgColor} ${textColor} p-3 rounded-lg shadow-sm 
+            border border-white/20`}>
+          {icon}
+        </div>
       </div>
-      <p className="text-emerald-600 text-sm font-medium">{change}</p>
+
+      {/* Change text */}
+      <p className="text-[#555557] text-xs">
+        {change}
+      </p>
     </div>
   )
 }
