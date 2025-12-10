@@ -1,6 +1,7 @@
 import Header from './(external pages)/components/Header';
 import './globals.css';
 import Footer from './(external pages)/components/Footer';
+import { Toaster } from 'sonner';
 
 export const metadata = {
   title: 'PathPanda External Pages',
@@ -21,6 +22,7 @@ export default function ExternalLayout({
         {/* Main content */}
         <main className="flex-1">{children}</main>
         <Footer />
+        <Toaster />
       </body>
     </html>
   );

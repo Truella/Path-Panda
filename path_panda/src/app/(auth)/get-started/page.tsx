@@ -4,21 +4,21 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { supabase as supabaseInstance } from '../../../../db/supabaseClient';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 interface AuthFormData {
   email: string;
   password: string;
 }
 
-const AnimatedGradient = () => (
+const AnimatedGradientStyle = () => (
   <style jsx global>{`
     @keyframes gradient-animation {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-    .animated-gradient {
-      background: linear-gradient(-45deg, #7a5e46, #a67c52, #d4a574, #b9936c);
+    .animated-gradient-bg {
       background-size: 400% 400%;
       animation: gradient-animation 15s ease infinite;
     }
@@ -50,13 +50,14 @@ export default function AuthPage() {
 
     if (authError) {
       setError(authError.message);
+      toast.error(authError.message);
     } else {
       reset();
       
       const message = isSignIn
         ? 'Signed in successfully! Redirecting to dashboard.'
         : 'Account created successfully! Redirecting to dashboard.';
-      alert(message);
+      toast.success(message);
       router.push('/dashboard');
     }
     setLoading(false);
@@ -74,6 +75,7 @@ export default function AuthPage() {
 
     if (error) {
       setError(error.message);
+      toast.error(error.message);
     }
     setLoading(false);
   };
@@ -86,14 +88,9 @@ export default function AuthPage() {
 
   return (
     <>
-      <AnimatedGradient />
-      <div className="min-h-screen flex flex-col items-center justify-center animated-gradient p-4">
+      <AnimatedGradientStyle />
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-linear-to-br from-[#f9f7fe] via-[#fef9f5] to-[#faf4ed] animated-gradient-bg">
         <div className="w-full max-w-md">
-          <div className="text-center mb-8">
-            <h1 className="text-5xl font-black tracking-tight text-white mb-2">PathPanda</h1>
-            <p className="text-lg font-medium text-white/80">Your seamless user onboarding guide</p>
-          </div>
-
           <div className="bg-white rounded-2xl shadow-2xl p-2 min-h-[560px]">
             {/* Tab Component */}
             <div className="flex bg-gray-100 rounded-xl">
