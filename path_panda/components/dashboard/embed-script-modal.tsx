@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Copy, Check, Loader2 } from "lucide-react"
+import { Copy, Check } from "lucide-react"
 import { toast } from "sonner"
 
 interface EmbedScriptModalProps {
@@ -87,7 +87,7 @@ export function EmbedScriptModal({ isOpen, onClose, tourId, embedKey }: EmbedScr
               Embed Code
             </label>
             <div className="bg-gray-900 border border-gray-700 rounded-lg p-3 sm:p-4 overflow-x-auto">
-              <pre className="text-green-400 font-mono text-xs sm:text-sm whitespace-pre-wrap break-words">
+              <pre className="text-green-400 font-mono text-xs sm:text-sm whitespace-pre-wrap wrap-break-word">
                 {embedCode}
               </pre>
             </div>

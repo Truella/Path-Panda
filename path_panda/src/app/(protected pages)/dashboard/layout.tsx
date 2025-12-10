@@ -12,7 +12,7 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
-  title: "Dashboard - PathPanda",
+  title: "PathPanda | Dashboard",
   description: "Create and manage engaging onboarding tours with PathPanda"
   
 }

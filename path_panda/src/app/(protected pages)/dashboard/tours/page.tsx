@@ -18,22 +18,21 @@ export default function ToursPage() {
   const deleteTourMutation = useDeleteTour();
 
   const handleDeleteTour = async (id: string, tourTitle: string) => {
-    if (confirm(`Are you sure you want to delete "${tourTitle}"?`)) {
-      try {
-        await deleteTourMutation.mutateAsync(id);
-        toast.success('Tour deleted successfully', {
-          description: `"${tourTitle}" has been removed from your tours.`,
-        });
-      } catch (error) {
-        toast.error('Failed to delete tour', {
-          description:
-            error instanceof Error
-              ? error.message
-              : 'An unexpected error occurred. Please try again.',
-        });
-      }
-    }
-  };
+  try {
+    await deleteTourMutation.mutateAsync(id);
+    toast.success('Tour deleted successfully', {
+      description: `"${tourTitle}" has been removed from your tours.`,
+    });
+  } catch (error) {
+    toast.error('Failed to delete tour', {
+      description:
+        error instanceof Error
+          ? error.message
+          : 'An unexpected error occurred. Please try again.',
+    });
+  }
+};
+
 
   // Filter tours based on search term
   const filteredTours =
@@ -68,10 +67,10 @@ export default function ToursPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#f9f7fe]">
+    <div className="min-h-screen bg-[#f9f7fe] ">
       <Header />
 
-      <main className="overflow-auto">
+      <main className="overflow-auto max-w-7xl mx-auto">
         {/* Page Header */}
         <div className="border-b border-gray-200">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
