@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 
 interface UpdateTourVariables {
   tourId: string;
-  updates: Partial<Omit<Tour, 'id' | 'created_at' | 'updated_at'>>;
+  updates: Partial<Omit<Tour, 'id' | 'created_at' | 'updated_at' | 'embed_key' | 'user_id'>>;
 }
 
 export function useUpdateTour() {
@@ -16,10 +16,11 @@ export function useUpdateTour() {
   return useMutation<Tour, Error, UpdateTourVariables>({
     mutationFn: ({ tourId, updates }) => updateTour(tourId, updates),
     onSuccess: (data, variables) => {
-      // Invalidate the specific tour query
       queryClient.invalidateQueries({ queryKey: getTourQueryKey(variables.tourId) });
-      // Invalidate tours list to reflect changes
       queryClient.invalidateQueries({ queryKey: TOURS_QUERY_KEY });
+      toast.success('Tour updated successfully', {
+        description: `Changes to "${data.title}" have been saved.`
+      });
     },
     onError: (error) => {
       toast.error('Failed to update tour', {

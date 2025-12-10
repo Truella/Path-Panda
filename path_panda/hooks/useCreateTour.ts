@@ -4,7 +4,7 @@ import { Tour } from '../types/tour';
 import { TOURS_QUERY_KEY } from './useTours';
 import { toast } from 'sonner';
 
-type CreateTourInput = Omit<Tour, 'id' | 'created_at' | 'updated_at'>;
+type CreateTourInput = Omit<Tour, 'id' | 'created_at' | 'updated_at' | 'embed_key'>;
 
 export function useCreateTour() {
   const queryClient = useQueryClient();

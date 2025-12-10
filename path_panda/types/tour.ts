@@ -3,7 +3,7 @@ export interface Tour {
   user_id: string
   title: string
   description: string | null
-  embed_key: string
+  embed_key?: string
   is_active: boolean
   created_at: string
   updated_at: string

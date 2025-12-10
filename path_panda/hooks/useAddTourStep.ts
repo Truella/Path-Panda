@@ -3,6 +3,7 @@ import { addTourStep } from '../lib/api/tours';
 import { TourStep } from '../types/tour';
 import { TOURS_QUERY_KEY } from './useTours';
 import { getTourQueryKey } from './useTour';
+import { toast } from 'sonner';
 
 type AddTourStepInput = Omit<TourStep, 'id' | 'created_at'>;
 
@@ -12,10 +13,16 @@ export function useAddTourStep() {
   return useMutation<TourStep, Error, AddTourStepInput>({
     mutationFn: (step) => addTourStep(step),
     onSuccess: (data) => {
-      // Invalidate the specific tour to refetch with new step
       queryClient.invalidateQueries({ queryKey: getTourQueryKey(data.tour_id) });
-      // Invalidate tours list in case it displays step counts
       queryClient.invalidateQueries({ queryKey: TOURS_QUERY_KEY });
+      toast.success('Step added successfully', {
+        description: `Step ${data.order} has been added to the tour.`
+      });
+    },
+    onError: (error) => {
+      toast.error('Failed to add step', {
+        description: error.message || 'An unexpected error occurred. Please try again.'
+      });
     },
   });
 }

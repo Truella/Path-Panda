@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import { Header } from '../../../../../../components/dashboard/header';
 import { TourSidebar } from '../../../../../../components/dashboard/tour-sidebar';
 import { useCreateTour } from '../../../../../../hooks/useCreateTour';
-import { nanoid } from 'nanoid';
+import { useAuth } from '../../../../../../hooks/useAuth';
 
 export default function CreateTourPage() {
   const router = useRouter();
@@ -17,11 +17,22 @@ export default function CreateTourPage() {
   const [isActive, setIsActive] = useState(true);
   const [error, setError] = useState('');
 
+  const { userId, loading: authLoading } = useAuth();
   const createTourMutation = useCreateTour();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    // Check if user is authenticated
+    if (!userId) {
+      setError('You must be logged in to create a tour');
+      toast.error('Authentication required', {
+        description: 'Please sign in to create tours'
+      });
+      router.push('/auth');
+      return;
+    }
 
     // Validation
     if (!title.trim()) {
@@ -34,34 +45,48 @@ export default function CreateTourPage() {
     }
 
     try {
-      // Get user_id from your auth context/session
-      // For now, you'll need to replace this with actual user ID from your auth
-      const user_id = 'YOUR_USER_ID'; // TODO: Get from auth context
-
       const newTour = await createTourMutation.mutateAsync({
-        user_id,
+        user_id: userId,
         title: title.trim(),
         description: description.trim(),
-        embed_key: nanoid(12),
-
         is_active: isActive,
       });
 
       toast.success('Tour created successfully', {
-        description: `"${newTour.title}" is ready for steps.`,
+        description: `"${newTour.title}" is ready for steps.`
       });
 
       // Redirect to the edit page to add steps
       router.push(`/dashboard/tours/${newTour.id}`);
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'Failed to create tour';
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create tour';
       setError(errorMessage);
       toast.error('Failed to create tour', {
-        description: errorMessage,
+        description: errorMessage
       });
     }
   };
+
+  // Show loading while checking auth
+  if (authLoading) {
+    return (
+      <div className="flex flex-col min-h-screen bg-white">
+        <Header />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <Loader2 className="w-12 h-12 animate-spin text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-600">Loading...</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // Redirect to auth if not logged in
+  if (!userId) {
+    router.push('/auth');
+    return null;
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-white">

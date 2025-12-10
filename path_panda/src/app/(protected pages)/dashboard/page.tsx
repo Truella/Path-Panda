@@ -6,11 +6,13 @@ import { Header } from '../../../../components/dashboard/header';
 import { StatsCard } from '../../../../components/dashboard/stats-card';
 import { useTours } from '../../../../hooks/useTours';
 import { useDeleteTour } from '../../../../hooks/useDeleteTour';
+import { useRouter } from 'next/navigation';
 
 export default function Dashboard() {
   // Fetch tours from the database
   const { data: tours, isLoading, error } = useTours();
   const deleteTourMutation = useDeleteTour();
+  const router = useRouter();
 
   const handleDeleteTour = async (id: string, tourTitle: string) => {
     if (confirm('Are you sure you want to delete this tour?')) {
@@ -121,13 +123,11 @@ export default function Dashboard() {
                 </p>
               </div>
               <button
+                onClick={() => router.push('/dashboard/tours/new')}
                 className="flex items-center cursor-pointer gap-2 
              bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574]
              text-white px-4 py-2 rounded-lg 
              hover:opacity-90 transition font-medium text-sm"
-                onClick={() => {
-                  /* Navigate to create tour page */
-                }}
               >
                 <Plus className="w-5 h-5" />
                 Create Tour
@@ -156,7 +156,7 @@ export default function Dashboard() {
 
             {/* Tours List */}
             {!isLoading && tours && tours.length > 0 && (
-              <div className="space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {tours.map((tour) => (
                   <div
                     key={tour.id}
@@ -174,15 +174,18 @@ export default function Dashboard() {
                             </span>
                           )}
                         </div>
+
                         {tour.description && (
                           <p className="text-gray-500 text-sm mb-2">
                             {tour.description}
                           </p>
                         )}
+
                         <p className="text-gray-600 text-sm">
                           Steps: {tour.steps?.length || 0} • Started: 0 •
                           Completed: 0 • Skipped: 0
                         </p>
+
                         <p className="text-gray-400 text-xs mt-2">
                           Embed Key:{' '}
                           <code className="bg-gray-100 px-1 py-0.5 rounded">
@@ -190,8 +193,10 @@ export default function Dashboard() {
                           </code>
                         </p>
                       </div>
+
                       <div className="flex items-center gap-4">
                         <p className="text-lg font-bold text-black">0.0%</p>
+
                         <button
                           onClick={() => handleDeleteTour(tour.id, tour.title)}
                           disabled={deleteTourMutation.isPending}
@@ -206,6 +211,7 @@ export default function Dashboard() {
                         </button>
                       </div>
                     </div>
+
                     <p className="text-gray-500 text-xs mt-3">
                       Completion Rate
                     </p>

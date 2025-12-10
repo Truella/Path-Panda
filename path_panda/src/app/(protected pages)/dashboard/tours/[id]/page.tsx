@@ -45,7 +45,7 @@ export default function TourEditorPage() {
     if (!tour) return;
 
     const newOrder = steps.length + 1;
-    
+
     try {
       await addStepMutation.mutateAsync({
         tour_id: tour.id,
@@ -60,7 +60,8 @@ export default function TourEditorPage() {
       toast.success('Step added successfully');
     } catch (error) {
       toast.error('Failed to add step', {
-        description: error instanceof Error ? error.message : 'An error occurred'
+        description:
+          error instanceof Error ? error.message : 'An error occurred',
       });
     }
   };
@@ -82,7 +83,8 @@ export default function TourEditorPage() {
       toast.success('Step updated successfully');
     } catch (error) {
       toast.error('Failed to update step', {
-        description: error instanceof Error ? error.message : 'An error occurred'
+        description:
+          error instanceof Error ? error.message : 'An error occurred',
       });
     }
   };
@@ -99,7 +101,8 @@ export default function TourEditorPage() {
       toast.success('Step deleted successfully');
     } catch (error) {
       toast.error('Failed to delete step', {
-        description: error instanceof Error ? error.message : 'An error occurred'
+        description:
+          error instanceof Error ? error.message : 'An error occurred',
       });
     }
   };
@@ -127,7 +130,8 @@ export default function TourEditorPage() {
       toast.success('Tour saved successfully!');
     } catch (error) {
       toast.error('Failed to save tour', {
-        description: error instanceof Error ? error.message : 'An error occurred'
+        description:
+          error instanceof Error ? error.message : 'An error occurred',
       });
     }
   };
@@ -150,15 +154,28 @@ export default function TourEditorPage() {
   // Error state
   if (error || !tour) {
     return (
-      <div className="flex flex-col min-h-screen bg-white">
+      <div className="flex flex-col min-h-screen bg-[#f9f7fe]">
         <Header />
         <main className="flex-1 flex items-center justify-center p-8">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
-            <h3 className="text-red-800 font-semibold mb-2">Failed to load tour</h3>
-            <p className="text-red-600 mb-4">{error?.message || 'Tour not found'}</p>
-            <button 
-              onClick={() => router.push('/dashboard/tours')} 
-              className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+          <div className="bg-white border border-gray-200 rounded-xl p-8 max-w-md text-center shadow-sm">
+            {/* Icon */}
+            <div className="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-red-600 text-2xl font-bold">!</span>
+            </div>
+
+            <h3 className="text-xl font-semibold text-[#555557] mb-2">
+              Failed to load tour
+            </h3>
+
+            <p className="text-gray-600 text-sm mb-6">
+              {error?.message || 'Tour not found'}
+            </p>
+
+            <button
+              onClick={() => router.push('/dashboard/tours')}
+              className="cursor-pointer bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574]
+                       text-white px-4 py-2 rounded-lg font-medium text-sm
+                       hover:opacity-90 transition"
             >
               Back to Tours
             </button>
@@ -168,8 +185,11 @@ export default function TourEditorPage() {
     );
   }
 
-  const isSaving = updateTourMutation.isPending || addStepMutation.isPending || 
-                   updateStepMutation.isPending || deleteStepMutation.isPending;
+  const isSaving =
+    updateTourMutation.isPending ||
+    addStepMutation.isPending ||
+    updateStepMutation.isPending ||
+    deleteStepMutation.isPending;
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
@@ -376,7 +396,12 @@ interface StepEditorModalProps {
   isSaving?: boolean;
 }
 
-function StepEditorModal({ step, onSave, onClose, isSaving = false }: StepEditorModalProps) {
+function StepEditorModal({
+  step,
+  onSave,
+  onClose,
+  isSaving = false,
+}: StepEditorModalProps) {
   const [title, setTitle] = useState(step.title);
   const [content, setContent] = useState(step.content);
   const [selector, setSelector] = useState(step.selector);

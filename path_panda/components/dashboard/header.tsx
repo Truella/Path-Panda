@@ -29,7 +29,7 @@ export function Header() {
           <nav className="flex items-center gap-1">
             <Link
               href="/dashboard"
-              className={`px-4 py-2 rounded-md transition font-medium text-sm border-b ${
+              className={`px-4 py-2 transition font-medium text-sm border-b ${
                 isActive('/dashboard')
                   ? 'border-b-[#a67c52] text-[#a67c52]'
                   : 'border-b-transparent text-gray-600 hover:border-b-[#d4a574] hover:text-[#d4a574]'
@@ -40,7 +40,7 @@ export function Header() {
 
             <Link
               href="/dashboard/tours"
-              className={`px-4 py-2 rounded-md transition font-medium text-sm border-b ${
+              className={`px-4 py-2 transition font-medium text-sm border-b ${
                 isActive('/dashboard/tours')
                   ? 'border-b-[#a67c52] text-[#a67c52]'
                   : 'border-b-transparent text-gray-600 hover:border-b-[#d4a574] hover:text-[#d4a574]'

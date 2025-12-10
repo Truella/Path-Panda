@@ -2,10 +2,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteTourStep } from '../lib/api/tours';
 import { TOURS_QUERY_KEY } from './useTours';
 import { getTourQueryKey } from './useTour';
+import { toast } from 'sonner';
 
 interface DeleteTourStepVariables {
   stepId: string;
-  tourId: string; // We need this to invalidate the correct tour query
+  tourId: string;
 }
 
 export function useDeleteTourStep() {
@@ -14,10 +15,16 @@ export function useDeleteTourStep() {
   return useMutation<void, Error, DeleteTourStepVariables>({
     mutationFn: ({ stepId }) => deleteTourStep(stepId),
     onSuccess: (_, variables) => {
-      // Invalidate the specific tour to refetch without deleted step
       queryClient.invalidateQueries({ queryKey: getTourQueryKey(variables.tourId) });
-      // Invalidate tours list in case it displays step counts
       queryClient.invalidateQueries({ queryKey: TOURS_QUERY_KEY });
+      toast.success('Step deleted successfully', {
+        description: 'The step has been removed from the tour.'
+      });
+    },
+    onError: (error) => {
+      toast.error('Failed to delete step', {
+        description: error.message || 'An unexpected error occurred. Please try again.'
+      });
     },
   });
 }
