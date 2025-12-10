@@ -31,11 +31,11 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
-<h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight">
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight">
           <span className="block text-[#555557] font-extrabold opacity-0 translate-y-8 animate-reveal delay-200">
             Welcome to
           </span>
-          <span className="block bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] bg-clip-text text-transparent opacity-0 translate-y-8 animate-reveal delay-500">
+          <span className="block bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] bg-clip-text text-transparent opacity-0 translate-y-8 animate-reveal delay-500 mb-10">
             PathPanda
           </span>
         </h1>

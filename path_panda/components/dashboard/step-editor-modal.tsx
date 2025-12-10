@@ -5,7 +5,6 @@ import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { TourStep } from '../../types/tour';
 
-// Define proper types for the modal props
 export type NewStepData = Omit<
   TourStep,
   'id' | 'tour_id' | 'step_id' | 'created_at'

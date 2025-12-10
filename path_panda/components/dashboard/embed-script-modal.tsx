@@ -1,18 +1,23 @@
-"use client"
+'use client';
 
-import { useState, useEffect } from "react"
-import { Copy, Check } from "lucide-react"
-import { toast } from "sonner"
+import { useState, useEffect } from 'react';
+import { Copy, Check } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface EmbedScriptModalProps {
-  isOpen: boolean
-  onClose: () => void
-  tourId: string
-  embedKey?: string
+  isOpen: boolean;
+  onClose: () => void;
+  tourId: string;
+  embedKey?: string;
 }
 
-export function EmbedScriptModal({ isOpen, onClose, tourId, embedKey }: EmbedScriptModalProps) {
-  const [copied, setCopied] = useState(false)
+export function EmbedScriptModal({
+  isOpen,
+  onClose,
+  tourId,
+  embedKey,
+}: EmbedScriptModalProps) {
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -25,39 +30,35 @@ export function EmbedScriptModal({ isOpen, onClose, tourId, embedKey }: EmbedScr
   }, [isOpen]);
 
   // Real embed code using the actual embed key from the database
-  const embedCode = `<!-- Path Panda Tour Script -->
-<script src="https://cdn.pathpanda.com/embed.js"></script>
-<script>
-  PathPanda.init({
-    embedKey: "${embedKey ?? ''}",
-    tourId: "${tourId}"
-  });
-</script>`
-
+  const embedCode = `<script
+  type="module"
+  src="https://path-panda.pages.dev/PathPandaWidget.js"
+  data-embed-key="${embedKey ?? ''}"
+></script>`;
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(embedCode)
-      setCopied(true)
-      toast.success("Embed code copied!", {
-        description: "Paste it in your website's HTML"
-      })
-      setTimeout(() => setCopied(false), 2000)
+      await navigator.clipboard.writeText(embedCode);
+      setCopied(true);
+      toast.success('Embed code copied!', {
+        description: "Paste it in your website's HTML",
+      });
+      setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      toast.error("Failed to copy", {
-        description: "Please try copying manually"
-      })
+      toast.error('Failed to copy', {
+        description: 'Please try copying manually',
+      });
     }
-  }
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       onClick={onClose}
     >
-      <div 
+      <div
         className="bg-white rounded-xl shadow-xl w-full max-w-md sm:max-w-lg lg:max-w-2xl p-6 sm:p-8 border border-[#d4a574] max-h-[90vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
         onClick={(e) => e.stopPropagation()}
       >
@@ -101,7 +102,13 @@ export function EmbedScriptModal({ isOpen, onClose, tourId, embedKey }: EmbedScr
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 sm:p-4">
               <ol className="text-xs sm:text-sm text-gray-700 space-y-2 list-decimal list-inside">
                 <li>Copy the embed code above</li>
-                <li>Paste it before the closing <code className="bg-gray-200 px-1.5 py-0.5 rounded text-xs">&lt;/body&gt;</code> tag in your HTML</li>
+                <li>
+                  Paste it before the closing{' '}
+                  <code className="bg-gray-200 px-1.5 py-0.5 rounded text-xs">
+                    &lt;/body&gt;
+                  </code>{' '}
+                  tag in your HTML
+                </li>
                 <li>The tour will automatically appear on your website</li>
               </ol>
             </div>
@@ -136,5 +143,5 @@ export function EmbedScriptModal({ isOpen, onClose, tourId, embedKey }: EmbedScr
         </div>
       </div>
     </div>
-  )
+  );
 }
