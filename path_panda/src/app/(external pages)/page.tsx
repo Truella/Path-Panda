@@ -7,14 +7,13 @@ import VideoComponent from './components/video-component'
 
 export default function Page() {
   return (
-    
     <div>
-      <Hero/>
-      <VideoComponent />
-      <Features/>
-      <HowItWorks/>
-      <FaqAccordion/>
-     </div>
-  )
+      <Hero />
+      {/*<VideoComponent /> */}
+      <Features />
+      <HowItWorks />
+      <FaqAccordion />
+    </div>
+  );
 }
  
