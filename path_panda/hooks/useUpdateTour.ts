@@ -3,7 +3,6 @@ import { updateTour } from '../lib/api/tours';
 import { Tour } from '../types/tour';
 import { TOURS_QUERY_KEY } from './useTours';
 import { getTourQueryKey } from './useTour';
-import { toast } from 'sonner';
 
 interface UpdateTourVariables {
   tourId: string;
@@ -18,14 +17,6 @@ export function useUpdateTour() {
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: getTourQueryKey(variables.tourId) });
       queryClient.invalidateQueries({ queryKey: TOURS_QUERY_KEY });
-      toast.success('Tour updated successfully', {
-        description: `Changes to "${data.title}" have been saved.`
-      });
-    },
-    onError: (error) => {
-      toast.error('Failed to update tour', {
-        description: error.message || 'An unexpected error occurred. Please try again.'
-      });
     },
   });
 }
