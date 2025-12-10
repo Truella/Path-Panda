@@ -6,6 +6,9 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useAuth } from '../../../../hooks/useAuth';
+import { Panda } from 'lucide-react'; // Import Panda icon
+import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 interface AuthFormData {
   email: string;
@@ -73,7 +76,7 @@ export default function AuthPage() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/get-started`,
+        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/get-started`,
       },
     });
 
@@ -95,21 +98,37 @@ export default function AuthPage() {
       <AnimatedGradientStyle />
       <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-linear-to-br from-[#f9f7fe] via-[#fef9f5] to-[#faf4ed] animated-gradient-bg">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-2xl p-2 min-h-[560px]">
+          {/* PathPanda Logo and Text */}
+          <div className="text-center mb-8">
+            <Link href="/" className="flex items-center justify-center gap-2">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574]">
+                <Panda className="w-6 h-6 text-white" />
+              </div>
+              <span className="text-3xl font-black bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] bg-clip-text text-transparent">
+                PathPanda
+              </span>
+            </Link>
+          </div>
+
+          <div className="bg-white/70 backdrop-blur-xl rounded-2xl shadow-2xl p-2 min-h-[560px]">
             {/* Tab Component */}
-            <div className="flex bg-gray-100 rounded-xl">
-              <button
-                onClick={() => switchMode(true)}
-                className={`w-1/2 p-3 font-semibold rounded-lg transition-all duration-300 ${isSignIn ? 'bg-white shadow text-[#2d2d2f]' : 'text-[#2d2d2f]'}`}
-              >
-                Sign In
-              </button>
-              <button
-                onClick={() => switchMode(false)}
-                className={`w-1/2 p-3 font-semibold rounded-lg transition-all duration-300 ${!isSignIn ? 'bg-white shadow text-[#2d2d2f]' : 'text-[#2d2d2f]'}`}
-              >
-                Sign Up
-              </button>
+            <div className="flex bg-gray-100/70 rounded-xl p-1 relative">
+              {[ 'Sign In', 'Sign Up' ].map((item) => (
+                <button
+                  key={item}
+                  onClick={() => switchMode(item === 'Sign In')}
+                  className={`w-1/2 p-2.5 font-semibold rounded-lg transition-colors text-lg relative ${isSignIn === (item === 'Sign In') ? 'text-[#2d2d2f]' : 'text-[#2d2d2f]/60 hover:text-[#2d2d2f]'}`}
+                >
+                  {isSignIn === (item === 'Sign In') && (
+                    <motion.div
+                      layoutId="active-pill"
+                      className="absolute inset-0 bg-white rounded-lg shadow-md"
+                      transition={{ type: 'spring', duration: 0.6 }}
+                    />
+                  )}
+                  <span className="relative z-10">{item}</span>
+                </button>
+              ))}
             </div>
 
             {/* Form Content */}
@@ -154,13 +173,7 @@ export default function AuthPage() {
                   />
                 </div>
 
-                {isSignIn && (
-                  <div className="text-right mb-6">
-                    <a href="#" className="text-sm font-medium text-[#7a5e46] hover:underline">
-                      Forgot password?
-                    </a>
-                  </div>
-                )}
+
 
                 <button
                   type="submit"

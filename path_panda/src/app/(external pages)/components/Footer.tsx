@@ -5,7 +5,6 @@ export default function Footer() {
     { href: "/", label: "Home" },
     { href: "/about-us", label: "About Us" },
     { href: "/docs", label: "Docs" },
-    { href: "/faq-accordion", label: "FAQs" },
   ]
 
   return (
