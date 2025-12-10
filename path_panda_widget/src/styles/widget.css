@@ -134,7 +134,8 @@
 .tour-controls {
   display: flex;
   gap: 8px;
-  justify-content: flex-end;
+  justify-content: space-between;
+  margin-bottom: 4px;
 }
 
 .tour-btn {
@@ -146,22 +147,30 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all .3s;
 }
-
+.tour-dismiss{
+  font-size: 12px;
+  color: #374151;
+  cursor: pointer;
+    transition: all .3s;
+}
+.tour-dismiss:hover{
+  text-decoration: underline;
+}
 .tour-btn:hover {
   background: #f9fafb;
-  border-color: #d1d5db;
+  border-color: #111114;
 }
 
 .tour-btn-primary {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, #111114, #464647);
   color: white;
   border: none;
 }
 
 .tour-btn-primary:hover {
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  background: linear-gradient(135deg, #2e2e32, #2c2b2c);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }

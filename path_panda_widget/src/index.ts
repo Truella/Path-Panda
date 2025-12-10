@@ -2,7 +2,7 @@
 import { getTour } from "./api/getTours";
 import { getTourSteps } from "./api/getTourSteps";
 import { recordEvent } from "./api/recordEvents";
-import type {  TourState} from "./types";
+import type { TourState } from "./types";
 import "./styles/widget.css";
 
 class TourWidget {
@@ -164,7 +164,11 @@ class TourWidget {
 		}
 
 		// Ensure the target is visible to the user.
-		targetEl.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+		targetEl.scrollIntoView({
+			behavior: "smooth",
+			block: "center",
+			inline: "center",
+		});
 
 		// Remove previous clone
 		if (this.clonedEl) {
@@ -283,24 +287,27 @@ class TourWidget {
 							}%"></div>
             </div>
           </div>
-          <div class="tour-controls">
-            ${
-							this.state.currentStepIndex > 0
-								? '<button class="tour-btn tour-back-btn">Back</button>'
-								: ""
-						}
+          <div > 
+		  <div class="tour-controls">${
+				this.state.currentStepIndex > 0
+					? '<button class="tour-btn tour-back-btn">Back</button>'
+					: ""
+			}
             <button class="tour-btn tour-skip-btn">Skip Tour</button>
-            <button class="tour-btn tour-dismiss-btn">Don\'t show again</button>
+
             ${
 							this.state.currentStepIndex < this.state.steps.length - 1
 								? '<button class="tour-btn tour-next-btn tour-btn-primary">Next</button>'
 								: '<button class="tour-btn tour-finish-btn tour-btn-primary">Finish</button>'
-						}
+						}</div>
+            <div>
+            <p class="tour-dismiss tour-dismiss-btn">
+							Don\'t show again
+						</p></div>
           </div>
         </div>
       </div>
     `;
-
 		document.body.appendChild(this.tooltipEl);
 
 		// Position the tooltip
@@ -516,7 +523,7 @@ class TourWidget {
 	const script =
 		(document.currentScript as HTMLScriptElement | null) ??
 		(document.querySelector(
-			'script[data-embed-key]'
+			"script[data-embed-key]"
 		) as HTMLScriptElement | null);
 
 	const embedKey = script?.getAttribute("data-embed-key");
