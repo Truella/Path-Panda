@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState } from "react"
 import { X } from "lucide-react"
-import { TourStep } from "../../constants/mockTours"
+import type { TourStep } from "../../constants/mockTours"
 
 interface StepEditorProps {
   step: TourStep

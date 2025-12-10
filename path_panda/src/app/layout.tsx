@@ -1,29 +1,27 @@
-import Header from './(external pages)/components/Header';
-import './globals.css';
-import Footer from './(external pages)/components/Footer';
-import { Toaster } from 'sonner';
+import type React from "react"
+import { Poppins } from "next/font/google"
+import "./globals.css"
+import Providers from "@/app/providers"
+import { Toaster } from "@/components/ui/sonner"
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+})
 
 export const metadata = {
-  title: 'PathPanda External Pages',
-  description: 'Landing and info pages',
-};
+  title: "PathPanda",
+  description: "Unified platform",
+}
 
-export default function ExternalLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="flex flex-col min-h-screen">
-        {/* Header */}
-        <Header />
-
-        {/* Main content */}
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <Toaster />
+      <body className={`${poppins.className} antialiased`}>
+        <Providers>{children}</Providers>
+        <Toaster position="top-right" richColors />
       </body>
     </html>
-  );
+  )
 }

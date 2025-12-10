@@ -167,9 +167,9 @@ export default function AuthPage() {
                 </button>
 
                 <div className="my-6 flex items-center">
-                  <div className="flex-grow border-t border-gray-300"></div>
+                  <div className="grow border-t border-gray-300"></div>
                   <span className="mx-4 text-xs text-[#2d2d2f]">OR</span> 
-                  <div className="flex-grow border-t border-gray-300"></div>
+                  <div className="grow border-t border-gray-300"></div>
                 </div>
                 
                 <button
