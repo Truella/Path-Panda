@@ -113,7 +113,7 @@ export default function AuthPage() {
           <div className="bg-white/70 backdrop-blur-xl rounded-2xl shadow-2xl p-2 min-h-[560px]">
             {/* Tab Component */}
             <div className="flex bg-gray-100/70 rounded-xl p-1 relative">
-              {[ 'Sign In', 'Sign Up' ].map((item) => (
+              {['Sign In', 'Sign Up'].map((item) => (
                 <button
                   key={item}
                   onClick={() => switchMode(item === 'Sign In')}
@@ -136,8 +136,10 @@ export default function AuthPage() {
               <h2 className="text-3xl font-bold text-[#2d2d2f] mb-2">
                 {isSignIn ? 'Welcome Back!' : 'Create an Account'}
               </h2>
-              <p className="text-[#2d2d2f] mb-6"> 
-                {isSignIn ? 'Sign in to continue your journey' : 'Get started in just a few steps'}
+              <p className="text-[#2d2d2f] mb-6">
+                {isSignIn
+                  ? 'Sign in to continue your journey'
+                  : 'Get started in just a few steps'}
               </p>
 
               {error && (
@@ -148,47 +150,56 @@ export default function AuthPage() {
 
               <form onSubmit={handleSubmit(handleAuth)}>
                 <div className="mb-4">
-                  <label className="block text-[#2d2d2f] text-sm font-bold mb-2" htmlFor="email"> 
+                  <label
+                    className="block text-[#2d2d2f] text-sm font-bold mb-2"
+                    htmlFor="email"
+                  >
                     Email Address
                   </label>
                   <input
                     id="email"
                     type="email"
                     placeholder="you@example.com"
-                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:border-[#7a5e46] text-[#2d2d2f] placeholder-[#2d2d2f]/70" 
+                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:border-[#7a5e46] text-[#2d2d2f] placeholder-[#2d2d2f]/70"
                     {...register('email', { required: true })}
                   />
                 </div>
 
                 <div className="mb-4">
-                  <label className="block text-[#2d2d2f] text-sm font-bold mb-2" htmlFor="password"> 
+                  <label
+                    className="block text-[#2d2d2f] text-sm font-bold mb-2"
+                    htmlFor="password"
+                  >
                     Password
                   </label>
                   <input
                     id="password"
                     type="password"
                     placeholder="••••••••"
-                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:border-[#7a5e46] text-[#2d2d2f] placeholder-[#2d2d2f]/70" 
+                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:border-[#7a5e46] text-[#2d2d2f] placeholder-[#2d2d2f]/70"
                     {...register('password', { required: true, minLength: 6 })}
                   />
                 </div>
-
-
 
                 <button
                   type="submit"
                   className="w-full mt-2 py-3 px-4 bg-gradient-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] text-white font-semibold rounded-lg hover:opacity-90 transition-all duration-300 disabled:opacity-50"
                   disabled={loading}
                 >
-                  {loading ? 'Processing...' : (isSignIn ? 'Sign In' : 'Create Account')}
+                  {loading
+                    ? 'Processing...'
+                    : isSignIn
+                      ? 'Sign In'
+                      : 'Create Account'}
                 </button>
 
-                <div className="my-6 flex items-center">
+                {/* 
+                 <div className="my-6 flex items-center">
                   <div className="grow border-t border-gray-300"></div>
-                  <span className="mx-4 text-xs text-[#2d2d2f]">OR</span> 
+                  <span className="mx-4 text-xs text-[#2d2d2f]">OR</span>
                   <div className="grow border-t border-gray-300"></div>
                 </div>
-                
+               
                 <button
                   type="button"
                   onClick={handleGoogleSignIn}
@@ -197,7 +208,7 @@ export default function AuthPage() {
                 >
                   <Image src="/icons/google.svg" alt="Google icon" width={20} height={20} />
                   <span className="font-semibold text-[#2d2d2f]">{isSignIn ? 'Sign In with Google' : 'Sign Up with Google'}</span> 
-                </button>
+                </button>*/}
               </form>
             </div>
           </div>
