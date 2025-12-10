@@ -1,7 +1,8 @@
 'use client';
 
-import { supabase } from '../../../db/supabaseClient';
+import { supabase } from '../../db/supabaseClient';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function LogoutButton() {
   const router = useRouter();
@@ -11,10 +12,8 @@ export default function LogoutButton() {
     
     if (error) {
       console.error('Error logging out:', error);
-      
-      alert('Error logging out. Please try again.');
+      toast.error('Error logging out. Please try again.');
     } else {
-      
       router.push('/get-started');
     }
   };
