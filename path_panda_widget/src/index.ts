@@ -4,6 +4,7 @@ import { getTourSteps } from "./api/getTourSteps";
 import { recordEvent } from "./api/recordEvents";
 import type { TourState } from "./types";
 import "./styles/widget.css";
+import './styles/tooltip.css'
 
 class TourWidget {
 	private state: TourState | null = null;
