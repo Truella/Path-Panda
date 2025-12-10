@@ -17,11 +17,6 @@ const faqs = [
       'Not at all. Everything is point-and-click in your dashboard. Just paste one tiny script and your tours go live instantly.',
   },
   {
-    question: 'Will it work with my tech stack?',
-    answer:
-      'Yes — React, Next.js, Vue, Webflow, WordPress, Shopify, plain HTML… if it runs in a browser, PathPanda works flawlessly.',
-  },
-  {
     question: 'Does it slow down my website?',
     answer:
       'Never. The script is <10 KB, loads asynchronously, and only activates when a user needs a tour. Most users won’t even know it’s there.',
@@ -31,11 +26,7 @@ const faqs = [
     answer:
       'Full control: show tours on specific pages, after X seconds, on exit intent, for new users only, returning visitors, or via manual trigger.',
   },
-  {
-    question: 'Is my data secure?',
-    answer:
-      '100%. We use encryption in transit and at rest. We never sell your data. You own your tours and analytics.',
-  },
+
 ];
 
 export default function FAQ() {
