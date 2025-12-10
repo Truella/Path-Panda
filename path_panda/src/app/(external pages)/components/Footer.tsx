@@ -10,9 +10,7 @@ export default function Footer() {
 
   return (
     <footer className="relative bg-[#f9f7fe] border-t border-[#e0dce8]">
-      {/* Footer content on top */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row justify-between items-center gap-6 z-10">
-        {/* Left: nav links */}
         <nav className="flex flex-wrap gap-6 text-[#2d2d2f] font-medium">
           {navLinks.map((link) => (
             <Link
@@ -25,13 +23,11 @@ export default function Footer() {
           ))}
         </nav>
 
-        {/* Right: copyright */}
         <p className="text-sm text-[#2d2d2f]/70 text-center md:text-right">
           &copy; {new Date().getFullYear()} PathPanda. All rights reserved.
         </p>
       </div>
 
-      {/* PATHPANDA watermark at the bottom */}
       <p className="absolute bottom-0 left-0 w-full text-center text-[#2d2d2f]/10 font-extrabold text-6xl pointer-events-none">
         PathPanda
       </p>
