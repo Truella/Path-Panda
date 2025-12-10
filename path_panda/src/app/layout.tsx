@@ -13,14 +13,21 @@ const poppins = Poppins({
 export const metadata = {
   title: "PathPanda",
   description: "Unified platform",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "32x32" },
+      { url: "/favicon-32x32.png", sizes: "32x32" },
+    ],
+    apple: "/apple-touch-icon.png",
+  }
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${poppins.className} antialiased`}>
+      <body className={`${poppins.className} antialiased flex flex-col min-h-screen`}>
         <Providers>{children}</Providers>
-        <Toaster position="top-right" richColors />
+        <Toaster position="top-right" duration={1000}/>
       </body>
     </html>
   )

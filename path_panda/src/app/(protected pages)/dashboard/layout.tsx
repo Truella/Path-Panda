@@ -1,10 +1,7 @@
 import type React from "react"
 import { Poppins } from "next/font/google"
-import type { Metadata } from "next"
 import Providers from "@/app/providers"
 import "../../globals.css"
-import { Toaster } from "@/components/ui/sonner"
-
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -12,23 +9,15 @@ const poppins = Poppins({
   display: "swap",
 })
 
-export const metadata: Metadata = {
-  title: "Dashboard - PathPanda",
-  description: "Create and manage engaging onboarding tours with PathPanda"
-  
+export const metadata = {
+  title: "PathPanda | Dashboard",
+  description: "Create and manage onboarding tours",
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={`${poppins.className} font-sans antialiased`}>
-        <Providers>{children}</Providers>
-        <Toaster position="top-right" richColors />
-      </body>
-    </html>
+    <div className={poppins.className}>
+      <Providers>{children}</Providers>
+    </div>
   )
 }

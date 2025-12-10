@@ -1,55 +1,109 @@
 'use client';
 
-import { Plus, Map, Zap, Eye, Trash2, Loader2 } from 'lucide-react';
+import {
+  Plus,
+  Map,
+  Zap,
+  Eye,
+  Trash2,
+  Loader2,
+  ArrowRight,
+  BarChart3,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { Header } from '../../../../components/dashboard/header';
 import { StatsCard } from '../../../../components/dashboard/stats-card';
 import { useTours } from '../../../../hooks/useTours';
 import { useDeleteTour } from '../../../../hooks/useDeleteTour';
 import { useRouter } from 'next/navigation';
+import { useState, useMemo } from 'react';
+import DeleteConfirmModal from '../../../../components/dashboard/delete-confirmation-modal';
+import { useAllTourAnalytics } from '../../../../hooks/useAllTourAnalytics';
 
 export default function Dashboard() {
-  // Fetch tours from the database
   const { data: tours, isLoading, error } = useTours();
   const deleteTourMutation = useDeleteTour();
   const router = useRouter();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedTour, setSelectedTour] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
+
+  // Fetch analytics for all tours
+  const { data: tourAnalyticsData, isLoading: analyticsLoading } =
+    useAllTourAnalytics(tours);
+
+  // Calculate aggregate stats from all tours
+  const stats = useMemo(() => {
+    if (!tourAnalyticsData) {
+      return {
+        toursStarted: 0,
+        completed: 0,
+        skipped: 0,
+        completionRate: '0.0%',
+      };
+    }
+
+    const totals = tourAnalyticsData.reduce(
+      (acc, item) => {
+        if (item.analytics) {
+          acc.toursStarted += item.analytics.totalSessions;
+          acc.completed += item.analytics.completedSessions;
+          acc.skipped += item.analytics.skippedSessions;
+        }
+        return acc;
+      },
+      { toursStarted: 0, completed: 0, skipped: 0 },
+    );
+
+    const completionRate =
+      totals.toursStarted > 0
+        ? ((totals.completed / totals.toursStarted) * 100).toFixed(1)
+        : '0.0';
+
+    return {
+      toursStarted: totals.toursStarted,
+      completed: totals.completed,
+      skipped: totals.skipped,
+      completionRate: `${completionRate}%`,
+    };
+  }, [tourAnalyticsData]);
 
   const handleDeleteTour = async (id: string, tourTitle: string) => {
-    if (confirm('Are you sure you want to delete this tour?')) {
-      try {
-        await deleteTourMutation.mutateAsync(id);
-        toast.success('Tour deleted successfully', {
-          description: `"${tourTitle}" has been removed from your tours.`,
-        });
-      } catch (error) {
-        toast.error('Failed to delete tour', {
-          description:
-            error instanceof Error
-              ? error.message
-              : 'An unexpected error occurred. Please try again.',
-        });
-      }
+    try {
+      await deleteTourMutation.mutateAsync(id);
+      toast.success('Tour deleted successfully', {
+        description: `"${tourTitle}" has been removed from your tours.`,
+      });
+    } catch (error) {
+      toast.error('Failed to delete tour', {
+        description:
+          error instanceof Error
+            ? error.message
+            : 'An unexpected error occurred. Please try again.',
+      });
     }
   };
 
-  // Calculate stats from real data
-  const stats = {
-    toursStarted: 0, // Will come from tour_analytics table (count of started_at)
-    completed: 0, // Will come from tour_analytics table
-    skipped: 0, // Calculate from analytics
-    completionRate: '0.0%', // Calculate from analytics data
+  // Helper to get analytics for a specific tour
+  const getTourAnalytics = (tourId: string) => {
+    return tourAnalyticsData?.find((item) => item.tourId === tourId)?.analytics;
   };
 
   if (error) {
     return (
       <div className="min-h-screen bg-white">
         <Header />
-        <div className="p-8">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <p className="text-red-800">Error loading tours: {error.message}</p>
+        <div className="p-4 sm:p-6 lg:p-8">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 sm:p-6">
+            <h3 className="text-red-800 font-semibold mb-2 text-sm sm:text-base">
+              Error loading tours
+            </h3>
+            <p className="text-red-600 text-sm">{error.message}</p>
             <button
               onClick={() => window.location.reload()}
-              className="mt-2 text-sm text-red-600 hover:text-red-700 underline"
+              className="mt-3 text-sm text-red-600 hover:text-red-700 underline"
             >
               Try again
             </button>
@@ -63,59 +117,61 @@ export default function Dashboard() {
     <div className="min-h-screen bg-[#f9f7fe]">
       <Header />
 
-      <main className="overflow-auto">
+      <main className="overflow-auto max-w-7xl mx-auto">
         {/* Page Header */}
-        <div className="border-b border-gray-200 ">
-          <div className="px-8 py-6">
-            <h1 className="text-2xl font-bold text-[#555557]">Analytics</h1>
+        <div className="border-b border-gray-200">
+          <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+            <h1 className="text-xl sm:text-2xl font-bold text-[#555557]">
+              Analytics
+            </h1>
             <p className="bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] bg-clip-text text-transparent text-sm mt-1">
               Track the performance of your onboarding tours
             </p>
           </div>
         </div>
 
-        <div className="p-8">
+        <div className="p-4 sm:p-6 lg:p-8">
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
             <StatsCard
               title="Tours Started"
               value={stats.toursStarted.toString()}
               change="Total number of tour initiations"
-              icon={<Map className="w-6 h-6" />}
+              icon={<Map className="w-5 h-5 sm:w-6 sm:h-6" />}
               bgColor="bg-gray-100"
-              textColor="text-gray-700"
+              textColor="text-amber-700"
             />
             <StatsCard
               title="Completed"
               value={stats.completed.toString()}
               change="Users who completed the tour"
-              icon={<Eye className="w-6 h-6" />}
+              icon={<Eye className="w-5 h-5 sm:w-6 sm:h-6" />}
               bgColor="bg-gray-100"
-              textColor="text-gray-700"
+              textColor="text-amber-700"
             />
             <StatsCard
               title="Skipped"
               value={stats.skipped.toString()}
               change="Users who skipped the tour"
-              icon={<Map className="w-6 h-6" />}
+              icon={<Map className="w-5 h-5 sm:w-6 sm:h-6" />}
               bgColor="bg-gray-100"
-              textColor="text-gray-700"
+              textColor="text-amber-700"
             />
             <StatsCard
               title="Completion Rate"
               value={stats.completionRate}
               change="Average completion rate"
-              icon={<Zap className="w-6 h-6" />}
+              icon={<Zap className="w-5 h-5 sm:w-6 sm:h-6" />}
               bgColor="bg-gray-100"
-              textColor="text-gray-700"
+              textColor="text-amber-700"
             />
           </div>
 
           {/* Tour Performance Section */}
           <div>
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-xl font-bold text-[#555557]">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+              <div className="flex-1 min-w-0">
+                <h2 className="text-lg sm:text-xl font-bold text-[#555557]">
                   Tour Performance
                 </h2>
                 <p className="bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] bg-clip-text text-transparent text-sm mt-1">
@@ -124,28 +180,31 @@ export default function Dashboard() {
               </div>
               <button
                 onClick={() => router.push('/dashboard/tours/new')}
-                className="flex items-center cursor-pointer gap-2 
+                className="flex items-center justify-center cursor-pointer gap-2 
              bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574]
              text-white px-4 py-2 rounded-lg 
-             hover:opacity-90 transition font-medium text-sm"
+             hover:opacity-90 transition font-medium text-sm whitespace-nowrap
+             w-full sm:w-auto"
               >
-                <Plus className="w-5 h-5" />
+                <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
                 Create Tour
               </button>
             </div>
 
             {/* Loading State */}
-            {isLoading && (
+            {(isLoading || analyticsLoading) && (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+                <Loader2 className="w-8 h-8 sm:w-10 sm:h-10 animate-spin text-gray-400" />
               </div>
             )}
 
             {/* Empty State */}
             {!isLoading && tours?.length === 0 && (
-              <div className="text-center py-12 border border-gray-200 rounded-lg">
-                <Map className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                <h3 className="text-lg font-semibold text-[#555557] mb-1">
+              <div className="text-center py-12 border border-gray-200 rounded-lg bg-white">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Map className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-semibold text-[#555557] mb-2">
                   No tours yet
                 </h3>
                 <p className="bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] bg-clip-text text-transparent text-sm">
@@ -156,70 +215,142 @@ export default function Dashboard() {
 
             {/* Tours List */}
             {!isLoading && tours && tours.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {tours.map((tour) => (
-                  <div
-                    key={tour.id}
-                    className="border border-gray-200 rounded-lg p-6 hover:border-gray-300 transition"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-1">
-                          <h3 className="font-semibold text-black">
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+                {tours.map((tour) => {
+                  const analytics = getTourAnalytics(tour.id);
+                  const completionRate = analytics?.completionRate || 0;
+
+                  return (
+                    <div
+                      key={tour.id}
+                      className="group relative bg-white border border-gray-200 rounded-xl p-5 sm:p-6 hover:border-[#d4a574] hover:shadow-lg transition-all duration-300"
+                    >
+                      {/* Header */}
+                      <div className="mb-4">
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="w-10 h-10 bg-linear-to-br from-[#7a5e46] via-[#a67c52] to-[#d4a574] rounded-lg flex items-center justify-center shrink-0">
+                            <Map className="w-5 h-5 text-white" />
+                          </div>
+                          <h3 className="font-bold text-[#555557] text-base sm:text-lg truncate flex-1 min-w-0">
                             {tour.title}
                           </h3>
-                          {!tour.is_active && (
-                            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                              Inactive
-                            </span>
-                          )}
+                          {/* Status Badge and Delete Button */}
+                          <div className="flex items-center justify-between">
+                            {!tour.is_active && (
+                              <span className="inline-flex items-center text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full font-medium">
+                                Inactive
+                              </span>
+                            )}
+                            <button
+                              onClick={() => {
+                                setSelectedTour({
+                                  id: tour.id,
+                                  title: tour.title,
+                                });
+                                setShowDeleteModal(true);
+                              }}
+                              disabled={deleteTourMutation.isPending}
+                              className="text-gray-400 cursor-pointer hover:text-red-600 transition disabled:opacity-50 shrink-0 p-1 hover:bg-red-50 rounded-lg"
+                              title="Delete tour"
+                            >
+                              <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                            </button>
+                          </div>
                         </div>
+                      </div>
 
-                        {tour.description && (
-                          <p className="text-gray-500 text-sm mb-2">
-                            {tour.description}
+                      {/* Description */}
+                      {tour.description && (
+                        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                          {tour.description}
+                        </p>
+                      )}
+
+                      {/* Stats Grid */}
+                      <div className="grid grid-cols-3 gap-3 mb-4 pb-4 border-b border-gray-100">
+                        <div className="text-center">
+                          <p className="text-xs text-gray-500 mb-1">Steps</p>
+                          <p className="text-lg sm:text-xl font-bold text-[#555557]">
+                            {tour.steps?.length || 0}
                           </p>
-                        )}
-
-                        <p className="text-gray-600 text-sm">
-                          Steps: {tour.steps?.length || 0} • Started: 0 •
-                          Completed: 0 • Skipped: 0
-                        </p>
-
-                        <p className="text-gray-400 text-xs mt-2">
-                          Embed Key:{' '}
-                          <code className="bg-gray-100 px-1 py-0.5 rounded">
-                            {tour.embed_key}
-                          </code>
-                        </p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-xs text-gray-500 mb-1">Started</p>
+                          <p className="text-lg sm:text-xl font-bold text-[#555557]">
+                            {analytics?.totalSessions || 0}
+                          </p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-xs text-gray-500 mb-1">
+                            Completed
+                          </p>
+                          <p className="text-lg sm:text-xl font-bold text-[#555557]">
+                            {analytics?.completedSessions || 0}
+                          </p>
+                        </div>
                       </div>
 
-                      <div className="flex items-center gap-4">
-                        <p className="text-lg font-bold text-black">0.0%</p>
-
-                        <button
-                          onClick={() => handleDeleteTour(tour.id, tour.title)}
-                          disabled={deleteTourMutation.isPending}
-                          className="text-red-600 hover:text-red-700 transition disabled:opacity-50"
-                          title="Delete tour"
-                        >
-                          {deleteTourMutation.isPending ? (
-                            <Loader2 className="w-5 h-5 animate-spin" />
-                          ) : (
-                            <Trash2 className="w-5 h-5" />
-                          )}
-                        </button>
+                      {/* Completion Rate */}
+                      <div className="mb-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-xs font-medium text-gray-600">
+                            Completion Rate
+                          </span>
+                          <span className="text-sm font-bold bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] bg-clip-text text-transparent">
+                            {completionRate.toFixed(1)}%
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                          <div
+                            className="h-full bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] rounded-full transition-all duration-500"
+                            style={{ width: `${completionRate}%` }}
+                          />
+                        </div>
                       </div>
+
+                      {/* Embed Key */}
+                      <div className="bg-gray-50 rounded-lg p-3 mb-4">
+                        <p className="text-xs text-gray-500 mb-1 font-medium">
+                          Embed Key
+                        </p>
+                        <code className="text-xs text-gray-700 font-mono break-all">
+                          {tour.embed_key}
+                        </code>
+                      </div>
+
+                      {/* View Details Button */}
+                      <button
+                        onClick={() =>
+                          router.push(`/dashboard/tours/${tour.id}`)
+                        }
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-linear-to-br from-[#f9f7fe] via-[#fef9f5] to-[#faf4ed] text-[#555557] rounded-lg transition-all duration-200 font-medium text-sm group-hover:bg-linear-to-r group-hover:from-[#7a5e46] group-hover:via-[#a67c52] group-hover:to-[#d4a574] group-hover:text-white cursor-pointer"
+                      >
+                        <BarChart3 className="w-4 h-4" />
+                        View Details
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </button>
                     </div>
-
-                    <p className="text-gray-500 text-xs mt-3">
-                      Completion Rate
-                    </p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
+          {showDeleteModal && selectedTour && (
+            <DeleteConfirmModal
+              title="Delete Tour?"
+              description={`Are you sure you want to delete "${selectedTour.title}"? This action cannot be undone.`}
+              isDeleting={deleteTourMutation.isPending}
+              onCancel={() => {
+                setShowDeleteModal(false);
+                setSelectedTour(null);
+              }}
+              onConfirm={async () => {
+                await handleDeleteTour(selectedTour.id, selectedTour.title);
+                setShowDeleteModal(false);
+                setSelectedTour(null);
+              }}
+            />
+          )}
         </div>
       </main>
     </div>
