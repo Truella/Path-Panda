@@ -59,7 +59,7 @@ function Slide({ slide, i, smoothX }: SlideProps) {
           </div>
 
           {/* Animated Demo Area */}
-          <div className="flex-1 bg-gradient-to-br from-[#fef9f5] to-[#f9f7fe] flex items-center justify-center p-8 md:p-12">
+          <div className="flex-1 bg-linear-to-br from-[#fef9f5] to-[#f9f7fe] flex items-center justify-center p-8 md:p-12">
             <div className="max-w-2xl">
               <slide.animation />
             </div>
