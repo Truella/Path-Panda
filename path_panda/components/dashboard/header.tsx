@@ -2,30 +2,46 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Panda, LogOut, Menu, X } from 'lucide-react';
+import { useAuth } from '../../hooks/useAuth';
+import { supabase } from '../../db/supabaseClient';
+import { toast } from 'sonner';
 
 export function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, loading } = useAuth();
 
   const isActive = (href: string) => pathname === href;
 
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast.error('Error logging out. Please try again.');
+      console.error('Error logging out:', error);
+    } else {
+      toast.success('Logged out successfully!');
+      router.push('/get-started');
+    }
+  };
+
   return (
     <header className="border-b border-[#d4a574] bg-[#f5f4f7] sticky top-0 z-50">
       <div className="flex items-center justify-between px-4 sm:px-8 py-4 max-w-7xl mx-auto">
         {/* Logo */}
-        <div className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full flex items-center justify-center bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574]">
             <Panda className="w-5 h-5 text-white" />
           </div>
           <span className="text-xl font-bold bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] bg-clip-text text-transparent">
             PathPanda
           </span>
-        </div>
+        </Link>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-8">
@@ -54,13 +70,17 @@ export function Header() {
 
           {/* Desktop User Section */}
           <div className="flex items-center gap-4">
-            <p className="text-sm text-gray-600 hover:underline hover:text-black transition cursor-default">
-              user@example.com
-            </p>
-            <button className="flex items-center gap-2 text-gray-600 hover:text-[#d4a574] transition font-medium text-sm cursor-pointer">
-              <LogOut className="w-4 h-4" />
-              Sign Out
-            </button>
+            {loading ? (
+                <div className="h-4 bg-gray-300 rounded w-24 animate-pulse"></div>
+            ) : user ? (
+              <>
+                <p className="text-sm text-gray-600">{user.email}</p>
+                <button onClick={handleLogout} className="flex items-center gap-2 text-gray-600 hover:text-[#d4a574] transition font-medium text-sm cursor-pointer">
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
+                </button>
+              </>
+            ) : null}
           </div>
         </div>
 
@@ -108,13 +128,17 @@ export function Header() {
 
           {/* Mobile User Section */}
           <div className="flex flex-col px-4 py-3 border-t border-[#d4a574]/30 gap-2">
-            <p className="text-sm text-gray-600 px-4">
-              user@example.com
-            </p>
-            <button className="flex items-center gap-2 text-gray-600 hover:text-[#d4a574] transition font-medium text-sm px-4 py-2 hover:bg-white/30 rounded">
-              <LogOut className="w-4 h-4" />
-              Sign Out
-            </button>
+            {loading ? (
+                <div className="h-4 bg-gray-300 rounded w-32 px-4"></div>
+            ) : user ? (
+              <>
+                <p className="text-sm text-gray-600 px-4">{user.email}</p>
+                <button onClick={() => { handleLogout(); closeMobileMenu(); }} className="flex items-center gap-2 text-gray-600 hover:text-[#d4a574] transition font-medium text-sm px-4 py-2 hover:bg-white/30 rounded">
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
+                </button>
+              </>
+            ) : null}
           </div>
         </div>
       )}

@@ -1,10 +1,11 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { supabase as supabaseInstance } from '../../../../db/supabaseClient';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { useAuth } from '../../../../hooks/useAuth';
 
 interface AuthFormData {
   email: string;
@@ -32,6 +33,13 @@ export default function AuthPage() {
   const { register, handleSubmit, reset } = useForm<AuthFormData>();
   const supabase = supabaseInstance;
   const router = useRouter();
+  const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/dashboard');
+    }
+  }, [isAuthenticated, router]);
 
   const handleAuth: SubmitHandler<AuthFormData> = async (data) => {
     setLoading(true);
@@ -51,16 +59,12 @@ export default function AuthPage() {
     if (authError) {
       setError(authError.message);
       toast.error(authError.message);
+      setLoading(false);
     } else {
       reset();
-      
-      const message = isSignIn
-        ? 'Signed in successfully! Redirecting to dashboard.'
-        : 'Account created successfully! Redirecting to dashboard.';
-      toast.success(message);
-      router.push('/dashboard');
+      toast.success(isSignIn ? 'Signed in successfully!' : 'Account created successfully!');
+      // The useEffect will handle the redirect
     }
-    setLoading(false);
   };
 
   const handleGoogleSignIn = async () => {
@@ -69,15 +73,15 @@ export default function AuthPage() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/dashboard`,
+        redirectTo: `${window.location.origin}/get-started`,
       },
     });
 
     if (error) {
       setError(error.message);
       toast.error(error.message);
+      setLoading(false);
     }
-    setLoading(false);
   };
   
   const switchMode = (signIn: boolean) => {
@@ -160,7 +164,7 @@ export default function AuthPage() {
 
                 <button
                   type="submit"
-                  className="w-full mt-2 py-3 px-4 bg-[#7a5e46] text-white font-semibold rounded-lg hover:bg-[#6b513b] transition-all duration-300 disabled:opacity-50"
+                  className="w-full mt-2 py-3 px-4 bg-gradient-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] text-white font-semibold rounded-lg hover:opacity-90 transition-all duration-300 disabled:opacity-50"
                   disabled={loading}
                 >
                   {loading ? 'Processing...' : (isSignIn ? 'Sign In' : 'Create Account')}
@@ -189,3 +193,4 @@ export default function AuthPage() {
     </>
   );
 }
+
