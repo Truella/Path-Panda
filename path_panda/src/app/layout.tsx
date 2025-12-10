@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`${poppins.className} antialiased`}>
         <Providers>{children}</Providers>
-        <Toaster position="top-right" richColors />
+        <Toaster position="bottom-right" />
       </body>
     </html>
   )
