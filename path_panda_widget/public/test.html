@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Walkthrough Widget Test Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 50px;
+      background-color: #f0f0f0;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .step {
+      padding: 25px;
+      border-radius: 10px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      font-size: 1.1rem;
+      line-height: 1.5;
+    }
+
+    .step h2 {
+      margin-top: 0;
+    }
+
+    .step button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .first { background-color: #ffdede; }
+    .second { background-color: #deffde; }
+    .third { background-color: #dedeff; }
+    .fourth { background-color: #fff5de; }
+    .fifth { background-color: #fdefff; }
+
+    img {
+      max-width: 100%;
+      margin-top: 10px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Walkthrough Widget Test Page</h1>
+  <div class="container">
+    <div class="step first">
+      <h2>Step 1 - Introduction</h2>
+      <p>Welcome to our test walkthrough. This step introduces the page and what to expect in the following steps.</p>
+      <button>Next</button>
+      <img src="https://via.placeholder.com/400x150?text=Step+1+Image" alt="Step 1 Illustration">
+    </div>
+
+    <div class="step second">
+      <h2>Step 2 - Features</h2>
+      <p>This step explains some key features of our page. It can include multiple points to highlight.</p>
+      <ul>
+        <li>Feature A</li>
+        <li>Feature B</li>
+        <li>Feature C</li>
+      </ul>
+      <button>Next</button>
+      <img src="https://via.placeholder.com/400x150?text=Step+2+Image" alt="Step 2 Illustration">
+    </div>
+
+    <div class="step third">
+      <h2>Step 3 - Interaction</h2>
+      <p>Here we show how users can interact with different elements, like buttons, forms, or other widgets.</p>
+      <input type="text" placeholder="Type something here">
+      <button>Next</button>
+      <img src="https://via.placeholder.com/400x150?text=Step+3+Image" alt="Step 3 Illustration">
+    </div>
+
+    <div class="step fourth">
+      <h2>Step 4 - Details</h2>
+      <p>This step provides more detailed information or instructions for the user.</p>
+      <blockquote>“This is an example of a highlighted note or tip for users.”</blockquote>
+      <button>Next</button>
+      <img src="https://via.placeholder.com/400x150?text=Step+4+Image" alt="Step 4 Illustration">
+    </div>
+
+    <div class="step fifth">
+      <h2>Step 5 - Conclusion</h2>
+      <p>This is the final step. Thank the user for going through the walkthrough and provide a call to action.</p>
+      <button>Finish</button>
+      <img src="https://via.placeholder.com/400x150?text=Step+5+Image" alt="Step 5 Illustration">
+    </div>
+  </div>
+  <script type="module" src="/src/main.ts"
+        data-embed-key="4b8fdffb88f615f14a01d69d"></script>
+</body>
+</html>
