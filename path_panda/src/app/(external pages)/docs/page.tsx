@@ -5,9 +5,9 @@ export default function DocsPage() {
   return (
     <div className="max-w-4xl mx-auto">
       <section className="mb-12">
-        <h1 className="text-5xl font-bold text-[#2d2d2f]">Documentation</h1>
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#2d2d2f]">Documentation</h1>
         <p className="mt-4 text-[#2d2d2f]/80 text-lg sm:text-xl">
-          Welcome to PathPanda! <br/>
+          Welcome to PathPanda! <br/><br/>
           The video below is a guide on how our site functions and will help you get started with integrating and using our product tour solution.
         </p>
       </section>
