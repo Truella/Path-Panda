@@ -1,13 +1,10 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { Plus, Search, Filter, X, Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
+import { Search, Filter, X, Loader2, Eye } from 'lucide-react';
 import { Header } from '../../../../../components/dashboard/header';
-import { TourCard } from '../../../../../components/dashboard/tour-card';
+import { ExploreCard } from '../../../../../components/dashboard/explore-card';
 import { useTours } from '../../../../../hooks/useTours';
-import { useDeleteTour } from '../../../../../hooks/useDeleteTour';
 import {
   Pagination,
   PaginationContent,
@@ -20,42 +17,25 @@ import {
 
 const TOURS_PER_PAGE = 6;
 
-type StatusFilter = 'all' | 'active' | 'inactive';
 type StepsFilter = 'all' | '1-3' | '4-6' | '7+';
 
-export default function ToursPage() {
-  const router = useRouter();
+export default function ExplorePage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
-
-  // Filter states
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [stepsFilter, setStepsFilter] = useState<StepsFilter>('all');
 
-  // Fetch tours from Supabase
-  const { data: tours, isLoading, error } = useTours();
-  const deleteTourMutation = useDeleteTour();
+  // Fetch all tours from Supabase
+  const { data: allTours, isLoading, error } = useTours();
 
-  const handleDeleteTour = async (id: string, tourTitle: string) => {
-    try {
-      await deleteTourMutation.mutateAsync(id);
-      toast.success('Tour deleted successfully', {
-        description: `"${tourTitle}" has been removed from your tours.`,
-      });
-    } catch (error) {
-      toast.error('Failed to delete tour', {
-        description:
-          error instanceof Error
-            ? error.message
-            : 'An unexpected error occurred. Please try again.',
-      });
-    }
-  };
+  // Filter to only show active tours
+  const activeTours = useMemo(() => {
+    return allTours?.filter((tour) => tour.is_active !== false) || [];
+  }, [allTours]);
 
   // Filter tours based on search term and filters
   const filteredTours = useMemo(() => {
-    let filtered = tours || [];
+    let filtered = activeTours;
 
     // Search filter
     if (searchTerm) {
@@ -65,14 +45,6 @@ export default function ToursPage() {
           (tour.description &&
             tour.description.toLowerCase().includes(searchTerm.toLowerCase())),
       );
-    }
-
-    // Status filter
-    if (statusFilter !== 'all') {
-      filtered = filtered.filter((tour) => {
-        const isActive = tour.is_active ?? true;
-        return statusFilter === 'active' ? isActive : !isActive;
-      });
     }
 
     // Steps filter
@@ -93,14 +65,13 @@ export default function ToursPage() {
     }
 
     return filtered;
-  }, [tours, searchTerm, statusFilter, stepsFilter]);
+  }, [activeTours, searchTerm, stepsFilter]);
 
   // Check if any filters are active
-  const hasActiveFilters = statusFilter !== 'all' || stepsFilter !== 'all';
+  const hasActiveFilters = stepsFilter !== 'all';
 
   // Clear all filters
   const clearFilters = () => {
-    setStatusFilter('all');
     setStepsFilter('all');
     setSearchTerm('');
   };
@@ -117,7 +88,7 @@ export default function ToursPage() {
   useEffect(() => {
     const timer = setTimeout(() => setCurrentPage(1), 0);
     return () => clearTimeout(timer);
-  }, [searchTerm, statusFilter, stepsFilter]);
+  }, [searchTerm, stepsFilter]);
 
   // Reset page if currentPage exceeds totalPages
   useEffect(() => {
@@ -189,7 +160,7 @@ export default function ToursPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f9f7fe] ">
+    <div className="min-h-screen bg-[#f9f7fe]">
       <Header />
 
       <main className="overflow-auto max-w-7xl mx-auto">
@@ -198,26 +169,15 @@ export default function ToursPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
             <div className="flex-1 min-w-0">
               <h1 className="text-xl sm:text-2xl font-bold text-[#555557] truncate">
-                My Tours
+                Explore Tours
               </h1>
               <p className="bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] bg-clip-text text-transparent text-sm sm:text-base mt-1">
-                Create and manage your onboarding tours
+                Discover and view active onboarding tours
                 {!isLoading &&
-                  tours &&
-                  ` • ${tours.length} ${tours.length === 1 ? 'tour' : 'tours'}`}
+                  activeTours &&
+                  ` • ${activeTours.length} ${activeTours.length === 1 ? 'tour' : 'tours'} available`}
               </p>
             </div>
-            <button
-              onClick={() => router.push('/dashboard/tours/new')}
-              className="flex items-center justify-center cursor-pointer gap-2 
-             bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574]
-             text-white px-4 py-2 rounded-lg 
-             hover:opacity-90 transition font-medium text-sm whitespace-nowrap
-             w-full sm:w-auto"
-            >
-              <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
-              Create Tour
-            </button>
           </div>
         </div>
 
@@ -249,8 +209,7 @@ export default function ToursPage() {
                 Filter
                 {hasActiveFilters && (
                   <span className="bg-white text-gray-900 rounded-full w-5 h-5 flex items-center justify-center text-xs font-semibold">
-                    {(statusFilter !== 'all' ? 1 : 0) +
-                      (stepsFilter !== 'all' ? 1 : 0)}
+                    1
                   </span>
                 )}
               </button>
@@ -274,86 +233,44 @@ export default function ToursPage() {
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {/* Status Filter */}
-                  <div>
-                    <label className="block text-sm font-medium text-[#555557] mb-3">
-                      Status
-                    </label>
-                    <div className="flex flex-wrap gap-3">
-                      {(['all', 'active', 'inactive'] as StatusFilter[]).map(
-                        (status) => (
-                          <button
-                            key={status}
-                            onClick={() => setStatusFilter(status)}
-                            className={`px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm cursor-pointer ${
-                              statusFilter === status
-                                ? 'bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] text-white shadow-md'
-                                : 'bg-white text-[#555557] hover:bg-gray-100'
-                            }`}
-                          >
-                            {status === 'all'
-                              ? 'All'
-                              : status.charAt(0).toUpperCase() +
-                                status.slice(1)}
-                          </button>
-                        ),
-                      )}
-                    </div>
-                  </div>
-
+                <div>
                   {/* Steps Filter */}
-                  <div>
-                    <label className="block text-sm font-medium text-[#555557] mb-3">
-                      Number of Steps
-                    </label>
-                    <div className="flex flex-wrap gap-3">
-                      {(['all', '1-3', '4-6', '7+'] as StepsFilter[]).map(
-                        (steps) => (
-                          <button
-                            key={steps}
-                            onClick={() => setStepsFilter(steps)}
-                            className={`px-4 py-2 rounded-lg cursor-pointer text-sm font-medium transition shadow-sm ${
-                              stepsFilter === steps
-                                ? 'bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] text-white shadow-md'
-                                : 'bg-white text-[#555557] hover:bg-gray-100'
-                            }`}
-                          >
-                            {steps === 'all' ? 'All' : `${steps} steps`}
-                          </button>
-                        ),
-                      )}
-                    </div>
+                  <label className="block text-sm font-medium text-[#555557] mb-3">
+                    Number of Steps
+                  </label>
+                  <div className="flex flex-wrap gap-3">
+                    {(['all', '1-3', '4-6', '7+'] as StepsFilter[]).map(
+                      (steps) => (
+                        <button
+                          key={steps}
+                          onClick={() => setStepsFilter(steps)}
+                          className={`px-4 py-2 rounded-lg cursor-pointer text-sm font-medium transition shadow-sm ${
+                            stepsFilter === steps
+                              ? 'bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] text-white shadow-md'
+                              : 'bg-white text-[#555557] hover:bg-gray-100'
+                          }`}
+                        >
+                          {steps === 'all' ? 'All' : `${steps} steps`}
+                        </button>
+                      ),
+                    )}
                   </div>
                 </div>
               </div>
             )}
 
             {/* Active Filters Display */}
-            {hasActiveFilters && (
+            {stepsFilter !== 'all' && (
               <div className="flex flex-wrap gap-2 mt-3">
-                {statusFilter !== 'all' && (
-                  <span className="inline-flex items-center gap-1 bg-[#d4a574] text-black px-3 py-1 rounded-full text-sm">
-                    Status: {statusFilter}
-                    <button
-                      onClick={() => setStatusFilter('all')}
-                      className="hover:bg-gray-800 rounded-full p-0.5 text-white cursor-pointer"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </span>
-                )}
-                {stepsFilter !== 'all' && (
-                  <span className="inline-flex items-center gap-1 bg-[#d4a574] text-black px-3 py-1 rounded-full text-sm">
-                    Steps: {stepsFilter}
-                    <button
-                      onClick={() => setStepsFilter('all')}
-                      className="hover:bg-gray-800 rounded-full p-0.5 cursor-pointer"
-                    >
-                      <X className="w-3 h-3 text-white" />
-                    </button>
-                  </span>
-                )}
+                <span className="inline-flex items-center gap-1 bg-[#d4a574] text-black px-3 py-1 rounded-full text-sm">
+                  Steps: {stepsFilter}
+                  <button
+                    onClick={() => setStepsFilter('all')}
+                    className="hover:bg-gray-800 rounded-full p-0.5 cursor-pointer"
+                  >
+                    <X className="w-3 h-3 text-white" />
+                  </button>
+                </span>
               </div>
             )}
           </div>
@@ -371,38 +288,29 @@ export default function ToursPage() {
           {isLoading && (
             <div className="flex flex-col items-center justify-center py-16">
               <Loader2 className="w-12 h-12 animate-spin text-gray-400 mb-4" />
-              <p className="text-gray-600">Loading your tours...</p>
+              <p className="text-gray-600">Loading tours...</p>
             </div>
           )}
 
           {/* Empty State - No Tours */}
-          {!isLoading && tours && tours.length === 0 && (
+          {!isLoading && activeTours && activeTours.length === 0 && (
             <div className="text-center py-12 border border-gray-200 rounded-lg">
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Plus className="w-8 h-8 text-gray-400" />
+                <Eye className="w-8 h-8 text-gray-400" />
               </div>
               <h3 className="text-xl font-semibold text-[#555557] mb-2">
-                No tours yet
+                No tours available
               </h3>
-              <p className="bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] bg-clip-text text-transparent text-sm  mb-6">
-                Create your first tour to get started!
+              <p className="bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] bg-clip-text text-transparent text-sm">
+                There are no active tours to explore at the moment.
               </p>
-              <button
-                onClick={() => router.push('/dashboard/tours/new')}
-                className=" cursor-pointer gap-2 
-             bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574]
-             text-white px-4 py-2 rounded-lg 
-             hover:opacity-90 transition font-medium text-sm"
-              >
-                Create Your First Tour
-              </button>
             </div>
           )}
 
           {/* Empty State - No Search Results */}
           {!isLoading &&
-            tours &&
-            tours.length > 0 &&
+            activeTours &&
+            activeTours.length > 0 &&
             filteredTours.length === 0 && (
               <div className="text-center py-12 border border-gray-200 rounded-lg">
                 <Search className="w-12 h-12 text-gray-400 mx-auto mb-4" />
@@ -427,12 +335,7 @@ export default function ToursPage() {
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {paginatedTours.map((tour) => (
-                  <TourCard
-                    key={tour.id}
-                    tour={tour}
-                    onDelete={() => handleDeleteTour(tour.id, tour.title)}
-                    isDeleting={deleteTourMutation.isPending}
-                  />
+                  <ExploreCard key={tour.id} tour={tour} />
                 ))}
               </div>
 

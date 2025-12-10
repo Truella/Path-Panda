@@ -11,10 +11,8 @@ export function useDeleteTour() {
     onSuccess: (_, tourId) => {
       queryClient.removeQueries({ queryKey: getTourQueryKey(tourId) });
       queryClient.invalidateQueries({ queryKey: TOURS_QUERY_KEY });
-      // Note: Toast is handled in the component to include tour title
     },
     onError: (error) => {
-      // Note: Toast is handled in the component for better context
     },
   });
 }

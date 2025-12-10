@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`${poppins.className} antialiased flex flex-col min-h-screen`}>
         <Providers>{children}</Providers>
-        <Toaster position="top-right" duration={1000}/>
+        <Toaster position="top-right" duration={2000}/>
       </body>
     </html>
   )

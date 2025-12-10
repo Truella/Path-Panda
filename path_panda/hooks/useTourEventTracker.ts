@@ -1,5 +1,3 @@
-// File: hooks/useTourEventTracker.ts
-
 import { useCallback, useEffect, useRef } from 'react';
 import { useTrackTourEvent } from './useTourEvents';
 import { TourEventMetadata } from '../types/tour';
@@ -92,7 +90,6 @@ export function useTourEventTracker(tourId: string | undefined) {
 
 /**
  * Hook that automatically tracks tour start when component mounts
- * Useful for embedding in your tour component
  */
 export function useAutoTrackTourStart(
   tourId: string | undefined,

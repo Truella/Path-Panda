@@ -1,8 +1,6 @@
 import { supabase } from '../../db/supabaseClient';
 import { TourEvent, TourEventMetadata } from '../../types/tour';
 
-// This file should be saved as: lib/api/tourEvents.ts
-
 /**
  * Get all events for a specific tour
  */

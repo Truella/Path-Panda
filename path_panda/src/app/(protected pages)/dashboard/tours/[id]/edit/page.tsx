@@ -120,15 +120,26 @@ export default function TourEditorPage() {
   };
 
   const handleActiveToggle = (checked: boolean) => {
-    // Check if trying to activate without enough steps
-    if (checked && steps.length < 5) {
-      toast.error('Cannot activate tour', {
-        description: 'Tour must have at least 5 steps to be activated',
-      });
-      return;
-    }
-    setIsActive(checked);
-  };
+  if (checked && steps.length < 5) {
+    toast.error('Tour cannot be activated', {
+      description: `This tour currently has only ${steps.length} step(s). Add at least ${5 - steps.length} more step(s) to make it available to all users.`,
+    });
+    return;
+  }
+
+  setIsActive(checked);
+
+  if (checked) {
+    toast.success('Tour is now active', {
+      description: 'This tour is available to all users.',
+    });
+  } else {
+    toast('Tour is now inactive', {
+      description: 'This tour will not be available to users until activated.',
+    });
+  }
+};
+
 
   const handleSaveChanges = async () => {
     if (!tourName.trim()) {

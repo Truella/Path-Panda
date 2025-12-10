@@ -16,9 +16,20 @@ import { StatsCard } from '../../../../components/dashboard/stats-card';
 import { useTours } from '../../../../hooks/useTours';
 import { useDeleteTour } from '../../../../hooks/useDeleteTour';
 import { useRouter } from 'next/navigation';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import DeleteConfirmModal from '../../../../components/dashboard/delete-confirmation-modal';
 import { useAllTourAnalytics } from '../../../../hooks/useAllTourAnalytics';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
+
+const TOURS_PER_PAGE = 6; // Adjust this number based on your preference
 
 export default function Dashboard() {
   const { data: tours, isLoading, error } = useTours();
@@ -29,6 +40,7 @@ export default function Dashboard() {
     id: string;
     title: string;
   } | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Fetch analytics for all tours
   const { data: tourAnalyticsData, isLoading: analyticsLoading } =
@@ -59,16 +71,35 @@ export default function Dashboard() {
 
     const completionRate =
       totals.toursStarted > 0
-        ? ((totals.completed / totals.toursStarted) * 100).toFixed(1)
-        : '0.0';
+        ? (totals.completed / totals.toursStarted) * 100
+        : 0;
 
     return {
       toursStarted: totals.toursStarted,
       completed: totals.completed,
       skipped: totals.skipped,
-      completionRate: `${completionRate}%`,
+      completionRate: `${completionRate.toFixed(1)}%`,
     };
   }, [tourAnalyticsData]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil((tours?.length || 0) / TOURS_PER_PAGE);
+  const paginatedTours = useMemo(() => {
+    if (!tours) return [];
+    const startIndex = (currentPage - 1) * TOURS_PER_PAGE;
+    const endIndex = startIndex + TOURS_PER_PAGE;
+    return tours.slice(startIndex, endIndex);
+  }, [tours, currentPage]);
+
+  // Reset to page 1 when tours change
+  useEffect(() => {
+    if (tours && currentPage > totalPages && totalPages > 0) {
+      // Wrap in a microtask to avoid synchronous state update in effect
+      const timer = setTimeout(() => setCurrentPage(1), 0);
+      return () => clearTimeout(timer);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tours, totalPages]);
 
   const handleDeleteTour = async (id: string, tourTitle: string) => {
     try {
@@ -89,6 +120,42 @@ export default function Dashboard() {
   // Helper to get analytics for a specific tour
   const getTourAnalytics = (tourId: string) => {
     return tourAnalyticsData?.find((item) => item.tourId === tourId)?.analytics;
+  };
+
+  // Generate page numbers for pagination
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisible = 5;
+
+    if (totalPages <= maxVisible) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 4; i++) {
+          pages.push(i);
+        }
+        pages.push('ellipsis');
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1);
+        pages.push('ellipsis');
+        for (let i = totalPages - 3; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push('ellipsis');
+        pages.push(currentPage - 1);
+        pages.push(currentPage);
+        pages.push(currentPage + 1);
+        pages.push('ellipsis');
+        pages.push(totalPages);
+      }
+    }
+
+    return pages;
   };
 
   if (error) {
@@ -215,124 +282,185 @@ export default function Dashboard() {
 
             {/* Tours List */}
             {!isLoading && tours && tours.length > 0 && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
-                {tours.map((tour) => {
-                  const analytics = getTourAnalytics(tour.id);
-                  const completionRate = analytics?.completionRate || 0;
+              <>
+                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+                  {paginatedTours.map((tour) => {
+                    const analytics = getTourAnalytics(tour.id);
+                    const completionRate = analytics?.completionRate || 0;
 
-                  return (
-                    <div
-                      key={tour.id}
-                      className="group relative bg-white border border-gray-200 rounded-xl p-5 sm:p-6 hover:border-[#d4a574] hover:shadow-lg transition-all duration-300"
-                    >
-                      {/* Header */}
-                      <div className="mb-4">
-                        <div className="flex items-center gap-2 mb-3">
-                          <div className="w-10 h-10 bg-linear-to-br from-[#7a5e46] via-[#a67c52] to-[#d4a574] rounded-lg flex items-center justify-center shrink-0">
-                            <Map className="w-5 h-5 text-white" />
-                          </div>
-                          <h3 className="font-bold text-[#555557] text-base sm:text-lg truncate flex-1 min-w-0">
-                            {tour.title}
-                          </h3>
-                          {/* Status Badge and Delete Button */}
-                          <div className="flex items-center justify-between">
-                            {!tour.is_active && (
-                              <span className="inline-flex items-center text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full font-medium">
-                                Inactive
-                              </span>
-                            )}
-                            <button
-                              onClick={() => {
-                                setSelectedTour({
-                                  id: tour.id,
-                                  title: tour.title,
-                                });
-                                setShowDeleteModal(true);
-                              }}
-                              disabled={deleteTourMutation.isPending}
-                              className="text-gray-400 cursor-pointer hover:text-red-600 transition disabled:opacity-50 shrink-0 p-1 hover:bg-red-50 rounded-lg"
-                              title="Delete tour"
-                            >
-                              <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Description */}
-                      {tour.description && (
-                        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                          {tour.description}
-                        </p>
-                      )}
-
-                      {/* Stats Grid */}
-                      <div className="grid grid-cols-3 gap-3 mb-4 pb-4 border-b border-gray-100">
-                        <div className="text-center">
-                          <p className="text-xs text-gray-500 mb-1">Steps</p>
-                          <p className="text-lg sm:text-xl font-bold text-[#555557]">
-                            {tour.steps?.length || 0}
-                          </p>
-                        </div>
-                        <div className="text-center">
-                          <p className="text-xs text-gray-500 mb-1">Started</p>
-                          <p className="text-lg sm:text-xl font-bold text-[#555557]">
-                            {analytics?.totalSessions || 0}
-                          </p>
-                        </div>
-                        <div className="text-center">
-                          <p className="text-xs text-gray-500 mb-1">
-                            Completed
-                          </p>
-                          <p className="text-lg sm:text-xl font-bold text-[#555557]">
-                            {analytics?.completedSessions || 0}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Completion Rate */}
-                      <div className="mb-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs font-medium text-gray-600">
-                            Completion Rate
-                          </span>
-                          <span className="text-sm font-bold bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] bg-clip-text text-transparent">
-                            {completionRate.toFixed(1)}%
-                          </span>
-                        </div>
-                        <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
-                          <div
-                            className="h-full bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] rounded-full transition-all duration-500"
-                            style={{ width: `${completionRate}%` }}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Embed Key */}
-                      <div className="bg-gray-50 rounded-lg p-3 mb-4">
-                        <p className="text-xs text-gray-500 mb-1 font-medium">
-                          Embed Key
-                        </p>
-                        <code className="text-xs text-gray-700 font-mono break-all">
-                          {tour.embed_key}
-                        </code>
-                      </div>
-
-                      {/* View Details Button */}
-                      <button
-                        onClick={() =>
-                          router.push(`/dashboard/tours/${tour.id}`)
-                        }
-                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-linear-to-br from-[#f9f7fe] via-[#fef9f5] to-[#faf4ed] text-[#555557] rounded-lg transition-all duration-200 font-medium text-sm group-hover:bg-linear-to-r group-hover:from-[#7a5e46] group-hover:via-[#a67c52] group-hover:to-[#d4a574] group-hover:text-white cursor-pointer"
+                    return (
+                      <div
+                        key={tour.id}
+                        className="relative bg-white border border-gray-200 rounded-xl p-5 sm:p-6 hover:border-[#d4a574] hover:shadow-lg transition-all duration-300"
                       >
-                        <BarChart3 className="w-4 h-4" />
-                        View Details
-                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
+                        {/* Header */}
+                        <div className="mb-4">
+                          <div className="flex items-center gap-2 mb-3">
+                            <div className="w-10 h-10 bg-linear-to-br from-[#7a5e46] via-[#a67c52] to-[#d4a574] rounded-lg flex items-center justify-center shrink-0">
+                              <Map className="w-5 h-5 text-white" />
+                            </div>
+                            <h3 className="font-bold text-[#555557] text-base sm:text-lg truncate flex-1 min-w-0">
+                              {tour.title}
+                            </h3>
+                            {/* Status Badge and Delete Button */}
+                            <div className="flex items-center justify-between">
+                              {!tour.is_active && (
+                                <span className="inline-flex items-center text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full font-medium">
+                                  Inactive
+                                </span>
+                              )}
+                              <button
+                                onClick={() => {
+                                  setSelectedTour({
+                                    id: tour.id,
+                                    title: tour.title,
+                                  });
+                                  setShowDeleteModal(true);
+                                }}
+                                disabled={deleteTourMutation.isPending}
+                                className="text-gray-400 cursor-pointer hover:text-red-600 transition disabled:opacity-50 shrink-0 p-1 hover:bg-red-50 rounded-lg"
+                                title="Delete tour"
+                              >
+                                <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Description */}
+                        {tour.description && (
+                          <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                            {tour.description}
+                          </p>
+                        )}
+
+                        {/* Stats Grid */}
+                        <div className="grid grid-cols-3 gap-3 mb-4 pb-4 border-b border-gray-100">
+                          <div className="text-center">
+                            <p className="text-xs text-gray-500 mb-1">Steps</p>
+                            <p className="text-lg sm:text-xl font-bold text-[#555557]">
+                              {tour.steps?.length || 0}
+                            </p>
+                          </div>
+                          <div className="text-center">
+                            <p className="text-xs text-gray-500 mb-1">
+                              Started
+                            </p>
+                            <p className="text-lg sm:text-xl font-bold text-[#555557]">
+                              {analytics?.totalSessions || 0}
+                            </p>
+                          </div>
+                          <div className="text-center">
+                            <p className="text-xs text-gray-500 mb-1">
+                              Completed
+                            </p>
+                            <p className="text-lg sm:text-xl font-bold text-[#555557]">
+                              {analytics?.completedSessions || 0}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Completion Rate */}
+                        <div className="mb-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-xs font-medium text-gray-600">
+                              Completion Rate
+                            </span>
+                            <span className="text-sm font-bold bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] bg-clip-text text-transparent">
+                              {completionRate.toFixed(1)}%
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                            <div
+                              className="h-full bg-linear-to-r from-[#7a5e46] via-[#a67c52] to-[#d4a574] rounded-full transition-all duration-500"
+                              style={{ width: `${completionRate}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Embed Key */}
+                        <div className="bg-gray-50 rounded-lg p-3 mb-4">
+                          <p className="text-xs text-gray-500 mb-1 font-medium">
+                            Embed Key
+                          </p>
+                          <code className="text-xs text-gray-700 font-mono break-all">
+                            {tour.embed_key}
+                          </code>
+                        </div>
+
+                        {/* View Details Button */}
+                        <button
+                          onClick={() =>
+                            router.push(`/dashboard/tours/${tour.id}`)
+                          }
+                          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 
+    bg-linear-to-br from-[#f9f7fe] via-[#fef9f5] to-[#faf4ed] 
+    text-[#555557] rounded-lg transition-all duration-200 font-medium text-sm 
+    hover:bg-linear-to-r hover:from-[#7a5e46] hover:via-[#a67c52] hover:to-[#d4a574] 
+    hover:text-white cursor-pointer"
+                        >
+                          <BarChart3 className="w-4 h-4" />
+                          View Details
+                          <ArrowRight className="w-4 h-4 hover:translate-x-1 transition-transform" />
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="mt-8 flex justify-center">
+                    <Pagination>
+                      <PaginationContent>
+                        <PaginationItem>
+                          <PaginationPrevious
+                            onClick={() =>
+                              setCurrentPage((prev) => Math.max(1, prev - 1))
+                            }
+                            className={
+                              currentPage === 1
+                                ? 'pointer-events-none opacity-50'
+                                : 'cursor-pointer'
+                            }
+                          />
+                        </PaginationItem>
+
+                        {getPageNumbers().map((page, index) => (
+                          <PaginationItem key={index}>
+                            {page === 'ellipsis' ? (
+                              <PaginationEllipsis />
+                            ) : (
+                              <PaginationLink
+                                onClick={() => setCurrentPage(page as number)}
+                                isActive={currentPage === page}
+                                className="cursor-pointer"
+                              >
+                                {page}
+                              </PaginationLink>
+                            )}
+                          </PaginationItem>
+                        ))}
+
+                        <PaginationItem>
+                          <PaginationNext
+                            onClick={() =>
+                              setCurrentPage((prev) =>
+                                Math.min(totalPages, prev + 1),
+                              )
+                            }
+                            className={
+                              currentPage === totalPages
+                                ? 'pointer-events-none opacity-50'
+                                : 'cursor-pointer'
+                            }
+                          />
+                        </PaginationItem>
+                      </PaginationContent>
+                    </Pagination>
+                  </div>
+                )}
+              </>
             )}
           </div>
           {showDeleteModal && selectedTour && (
