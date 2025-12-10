@@ -25,7 +25,7 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${poppins.className} antialiased`}>
+      <body className={`${poppins.className} antialiased flex flex-col min-h-screen`}>
         <Providers>{children}</Providers>
         <Toaster position="top-right" duration={1000}/>
       </body>
