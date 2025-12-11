@@ -2,32 +2,50 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Download, Play, Sliders, LayoutDashboard, HelpCircle, MessageSquare } from 'lucide-react';
+import {
+  Download,
+  Play,
+  Sliders,
+  LayoutDashboard,
+  HelpCircle,
+  MessageSquare,
+  BookOpen
+} from 'lucide-react';
 
 const navigation = [
   {
     title: 'Getting Started',
-    links: [
-      { title: 'Installation', href: '/docs/installation', icon: Download },
-      { title: 'Initialization', href: '/docs/initialization', icon: Play },
-    ],
+    links: [{ title: 'Docs', href: '/docs', icon: BookOpen }],
   },
   {
     title: 'Configuration',
     links: [
-      { title: 'Using the Dashboard', href: '/docs/dashboard', icon: LayoutDashboard },
+      {
+        title: 'Using the Dashboard',
+        href: '/docs/dashboard',
+        icon: LayoutDashboard,
+      },
+      { title: 'Installation', href: '/docs/installation', icon: Download },
     ],
   },
   {
     title: 'Guides',
     links: [
-      { title: 'Troubleshooting', href: '/docs/troubleshooting', icon: HelpCircle },
-      { title: 'Developer FAQ', href: '/docs/faq', icon: MessageSquare },
+      {
+        title: 'Troubleshooting',
+        href: '/docs/troubleshooting',
+        icon: HelpCircle,
+      },
+     // { title: 'Developer FAQ', href: '/docs/faq', icon: MessageSquare },
     ],
   },
 ];
 
-export default function DocsSidebar({ onLinkClick }: { onLinkClick?: () => void }) {
+export default function DocsSidebar({
+  onLinkClick,
+}: {
+  onLinkClick?: () => void;
+}) {
   const pathname = usePathname();
 
   return (
@@ -43,16 +61,21 @@ export default function DocsSidebar({ onLinkClick }: { onLinkClick?: () => void 
               const Icon = link.icon;
               return (
                 <li key={link.href}>
-                  <Link 
-                    href={link.href} 
+                  <Link
+                    href={link.href}
                     onClick={onLinkClick}
                     className={`flex items-center gap-2 px-3 py-2 rounded-r-lg transition-colors duration-200 -ml-[1px] ${
                       isActive
                         ? 'bg-amber-100 text-amber-700 font-semibold border-l-4 border-amber-500' // Added left border for active state
                         : 'text-gray-600 hover:bg-gray-50'
-                    }`}>
-                      {Icon && <Icon className={`w-5 h-5 ${isActive ? 'text-amber-700' : 'text-gray-400'}`} />}
-                      {link.title}
+                    }`}
+                  >
+                    {Icon && (
+                      <Icon
+                        className={`w-5 h-5 ${isActive ? 'text-amber-700' : 'text-gray-400'}`}
+                      />
+                    )}
+                    {link.title}
                   </Link>
                 </li>
               );
