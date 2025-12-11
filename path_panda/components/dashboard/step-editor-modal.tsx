@@ -66,9 +66,12 @@ export default function StepEditorModal({
       toast.error('Content is required');
       return;
     }
+    if (!selector.trim()) {
+      toast.error('Target element (CSS selector) is required');
+      return;
+    }
 
     if (isNewStep) {
-      // For new steps, only pass the fields needed
       const newStepData: NewStepData = {
         title: title.trim(),
         content: content.trim(),
@@ -78,7 +81,6 @@ export default function StepEditorModal({
       };
       (onSave as (step: NewStepData) => void)(newStepData);
     } else {
-      // For existing steps, pass the full step object
       const updatedStep: TourStep = {
         ...(step as TourStep),
         title: title.trim(),
@@ -183,7 +185,7 @@ export default function StepEditorModal({
         border border-gray-200
         rounded-xl
         bg-white
-        text-black text-sm sm:text-base
+        text-black cursor-pointer text-sm sm:text-base
         shadow-sm
         transition-all
         focus:outline-none
@@ -251,7 +253,7 @@ export default function StepEditorModal({
             />
 
             <p className="mt-2 text-xs text-gray-500">
-              Optional: Specify which element this step should highlight
+              Specify which element this step should highlight
             </p>
           </div>
         </div>
@@ -262,7 +264,7 @@ export default function StepEditorModal({
             disabled={isSaving}
             className="flex-1 px-4 sm:px-6 py-2 sm:py-3 border border-gray-200 rounded-lg text-[#555557] hover:bg-gray-50 transition font-semibold disabled:opacity-50 cursor-pointer text-sm sm:text-base"
           >
-            Cancel
+            Close
           </button>
           <button
             onClick={handleSave}

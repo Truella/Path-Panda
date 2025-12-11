@@ -37,16 +37,22 @@ export default function HowItWorks() {
   }, [isHovered, steps.length]);
 
   return (
-    <section className="bg-linear-to-b from-[#f9f7fe] to-white py-24">
+    <section className="bg-gradient-to-b from-[#f9f7fe] to-white py-24">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <motion.div 
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           <h2 className="text-5xl md:text-6xl font-black text-[#2d2d2f]">
             How It Works
           </h2>
           <p className="mt-6 text-xl md:text-2xl text-[#2d2d2f]/70 max-w-3xl mx-auto">
             Get your product tours live in minutes — no code, no hassle, no developers needed.
           </p>
-        </div>
+        </motion.div>
 
         <div
           className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto"
@@ -60,6 +66,14 @@ export default function HowItWorks() {
               <motion.div
                 key={index}
                 className="relative"
+                initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ 
+                  duration: 0.6, 
+                  delay: index * 0.15,
+                  ease: "easeOut" 
+                }}
                 onMouseEnter={() => setActiveIndex(index)} // Instant + locks
               >
                 {/* Soft glow background */}
@@ -93,7 +107,7 @@ export default function HowItWorks() {
                   }}
                 >
                   {/* Step Number */}
-                  <div
+                  <motion.div
                     className={`
                       w-20 h-20 rounded-3xl flex items-center justify-center text-4xl font-black mb-8
                       transition-all duration-700
@@ -102,29 +116,52 @@ export default function HowItWorks() {
                         : 'bg-[#fef9f5] text-[#7a5e46]/20'
                       }
                     `}
+                    initial={{ rotate: -180, scale: 0 }}
+                    whileInView={{ rotate: 0, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ 
+                      duration: 0.6, 
+                      delay: index * 0.15 + 0.2,
+                      type: "spring",
+                      stiffness: 200
+                    }}
                   >
                     {index + 1}
-                  </div>
+                  </motion.div>
 
-                  <h3
+                  <motion.h3
                     className={`
                       text-2xl md:text-3xl font-black mb-5 leading-tight
                       transition-colors duration-500
                       ${isActive ? 'text-[#2d2d2f]' : 'text-[#2d2d2f]/70'}
                     `}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ 
+                      duration: 0.5, 
+                      delay: index * 0.15 + 0.3 
+                    }}
                   >
                     {step.title}
-                  </h3>
+                  </motion.h3>
 
-                  <p
+                  <motion.p
                     className={`
                       text-lg leading-relaxed
                       transition-colors duration-500
                       ${isActive ? 'text-[#2d2d2f]/90' : 'text-[#2d2d2f]/60'}
                     `}
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ 
+                      duration: 0.5, 
+                      delay: index * 0.15 + 0.4 
+                    }}
                   >
                     {step.description}
-                  </p>
+                  </motion.p>
                 </motion.div>
               </motion.div>
             );
@@ -132,18 +169,27 @@ export default function HowItWorks() {
         </div>
 
         {/* Optional minimal dots */}
-        <div className="flex justify-center gap-3 mt-12">
+        <motion.div 
+          className="flex justify-center gap-3 mt-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+        >
           {steps.map((_, i) => (
-            <div
+            <motion.div
               key={i}
-              className={`h-2 rounded-full transition-all duration-500 ${
+              className={`h-2 rounded-full transition-all duration-500 cursor-pointer ${
                 activeIndex === i
                   ? 'bg-[#7a5e46] w-16'
                   : 'bg-[#7a5e46]/20 w-2 hover:w-8 hover:bg-[#7a5e46]/40'
               }`}
+              onClick={() => setActiveIndex(i)}
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
             />
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -130,13 +130,9 @@ export default function TourEditorPage() {
   setIsActive(checked);
 
   if (checked) {
-    toast.success('Tour is now active', {
-      description: 'This tour is available to all users.',
-    });
+    toast.success('Tour is now active');
   } else {
-    toast('Tour is now inactive', {
-      description: 'This tour will not be available to users until activated.',
-    });
+    toast('Tour is now inactive');
   }
 };
 
@@ -237,13 +233,13 @@ export default function TourEditorPage() {
           <div className="bg-white sticky top-0 sm:top-8 z-10 mb-4 sm:mb-8">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-8 py-4 sm:py-6 border-b border-gray-200 max-w-3xl gap-4">
               <div className="flex items-center gap-3 sm:gap-4">
-                <button
+                {/* <button
                   onClick={() => router.back()}
                   className="text-gray-600 hover:text-black transition p-1 cursor-pointer"
                   disabled={isSaving}
                 >
                   <ArrowLeft className="w-5 h-5" />
-                </button>
+                </button> */}
                 <div>
                   <h1 className="text-2xl sm:text-3xl font-bold text-[#555557]">
                     Tour Setup
@@ -264,7 +260,7 @@ export default function TourEditorPage() {
                     Saving...
                   </>
                 ) : (
-                  'Save Changes'
+                  'Save'
                 )}
               </button>
             </div>
@@ -324,11 +320,6 @@ export default function TourEditorPage() {
                     <div>
                       <span className="block text-sm font-semibold text-[#555557]">
                         Active
-                      </span>
-                      <span className="text-xs text-gray-600">
-                        {isActive
-                          ? 'Tour is currently visible to users'
-                          : 'Tour is currently hidden from users'}
                       </span>
                       {steps.length < 5 && (
                         <span className="block text-xs text-amber-600 mt-1">

@@ -19,7 +19,7 @@ export default function Hero() {
         clearInterval(interval);
         setTimeout(() => setShowCTA(true), 400);
       }
-    }, 60);
+    }, 30);
     return () => clearInterval(interval);
   }, []);
 
@@ -55,15 +55,15 @@ export default function Hero() {
           >
             <button
               onClick={() => setShowDemo(true)}
-              className="group px-6 py-3 bg-[#7a5e46] text-white font-semibold text-base rounded-full hover:bg-[#6b513b] transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2.5 hover:gap-4"
+              className="group px-6 py-3 bg-[#7a5e46] text-white font-semibold text-base rounded-full hover:bg-[#6b513b] transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2.5 hover:gap-4 cursor-pointer"
             >
               Try the Live Demo
               <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
             </button>
 
             <Link href="/docs" passHref>
-              <button className="px-6 py-3 border-2 border-[#7a5e46] text-[#7a5e46] font-semibold text-base rounded-full hover:bg-[#7a5e46]/5 transition-all duration-300 flex items-center gap-2.5">
-                <Sparkles className="w-5 h-5" />
+              <button className="px-6 py-3 border-2 border-[#7a5e46] text-[#7a5e46] font-semibold text-base rounded-full hover:bg-[#7a5e46]/5 transition-all duration-300 flex items-center gap-2.5 cursor-pointer hover:gap-4">
+                <Sparkles className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
                 Read the Docs
               </button>
             </Link>
