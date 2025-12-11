@@ -19,30 +19,35 @@ const faqs = [
   {
     question: 'Does it slow down my website?',
     answer:
-      'Never. The script is <10 KB, loads asynchronously, and only activates when a user needs a tour. Most users won’t even know it’s there.',
+      "Never. The script is <10 KB, loads asynchronously, and only activates when a user needs a tour. Most users won't even know it's there.",
   },
   {
     question: 'How are tours targeted to the right users?',
     answer:
       'Full control: show tours on specific pages, after X seconds, on exit intent, for new users only, returning visitors, or via manual trigger.',
   },
-
 ];
 
 export default function FAQ() {
   const [openItem, setOpenItem] = useState<string | null>(null);
 
   return (
-    <section className="bg-linear-to-b from-white to-[#f9f7fe] py-24">
+    <section className="bg-gradient-to-b from-white to-[#f9f7fe] py-24">
       <div className="max-w-4xl mx-auto px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <motion.div 
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           <h2 className="text-5xl md:text-6xl font-black text-[#2d2d2f]">
             Got Questions?
           </h2>
           <p className="mt-6 text-xl md:text-2xl text-[#2d2d2f]/70">
-            We’ve got answers. Everything you need to know about PathPanda.
+            We&apos;ve got answers. Everything you need to know about PathPanda.
           </p>
-        </div>
+        </motion.div>
 
         {/* Accordion */}
         <Accordion.Root
@@ -56,56 +61,72 @@ export default function FAQ() {
             const isOpen = openItem === `item-${index}`;
 
             return (
-              <Accordion.Item
+              <motion.div
                 key={index}
-                value={`item-${index}`}
-                className="group"
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: index * 0.1,
+                  ease: "easeOut" 
+                }}
               >
-                <Accordion.Header className="w-full">
-                  <Accordion.Trigger
-                    className={`
-                      w-full px-8 py-6 bg-white rounded-2xl shadow-md border border-transparent
-                      flex items-center justify-between text-left font-medium text-xl
-                      transition-all duration-500 ease-out
-                      hover:shadow-xl hover:border-[#7a5e46]/20 hover:bg-[#fef9f5]
-                      focus:outline-none focus-visible:ring-4 focus-visible:ring-[#7a5e46]/20
-                      data-[state=open]:rounded-b-none data-[state=open]:shadow-2xl
-                      data-[state=open]:border-b data-[state=open]:border-[#7a5e46]/30
-                    `}
-                  >
-                    <span className="pr-8 text-[#2d2d2f] group-hover:text-[#7a5e46]">
-                      {faq.question}
-                    </span>
-
-                    <motion.div
-                      animate={{ rotate: isOpen ? 180 : 0 }}
-                      transition={{ duration: 0.4, ease: 'easeOut' }}
-                      className="w-8 h-8 flex items-center justify-center shrink-0"
+                <Accordion.Item
+                  value={`item-${index}`}
+                  className="group"
+                >
+                  <Accordion.Header className="w-full">
+                    <Accordion.Trigger
+                      className={`
+                        w-full px-8 py-6 cursor-pointer bg-white rounded-2xl shadow-md border border-transparent
+                        flex items-center justify-between text-left font-medium text-xl
+                        transition-all duration-500 ease-out
+                        hover:shadow-xl hover:border-[#7a5e46]/20 hover:bg-[#fef9f5]
+                        focus:outline-none focus-visible:ring-4 focus-visible:ring-[#7a5e46]/20
+                        data-[state=open]:rounded-b-none data-[state=open]:shadow-2xl
+                        data-[state=open]:border-b data-[state=open]:border-[#7a5e46]/30
+                      `}
                     >
-                      <ChevronDown className="w-6 h-6 text-[#7a5e46]" />
-                    </motion.div>
-                  </Accordion.Trigger>
-                </Accordion.Header>
+                      <span className="pr-8 text-[#2d2d2f] group-hover:text-[#7a5e46] transition-colors duration-300">
+                        {faq.question}
+                      </span>
 
-                <Accordion.Content forceMount>
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{
-                      height: isOpen ? 'auto' : 0,
-                      opacity: isOpen ? 1 : 0,
-                    }}
-                    transition={{
-                      height: { duration: 0.5, ease: [0.32, 0.72, 0, 1] },
-                      opacity: { duration: 0.4, delay: 0.1 },
-                    }}
-                    className="overflow-hidden bg-white rounded-b-2xl shadow-inner"
-                  >
-                    <div className="px-8 py-7 text-lg text-[#2d2d2f]/80 leading-relaxed">
-                      {faq.answer}
-                    </div>
-                  </motion.div>
-                </Accordion.Content>
-              </Accordion.Item>
+                      <motion.div
+                        animate={{ rotate: isOpen ? 180 : 0 }}
+                        transition={{ duration: 0.4, ease: 'easeOut' }}
+                        className="w-8 h-8 flex items-center justify-center shrink-0"
+                      >
+                        <ChevronDown className="w-6 h-6 text-[#7a5e46]" />
+                      </motion.div>
+                    </Accordion.Trigger>
+                  </Accordion.Header>
+
+                  <Accordion.Content forceMount>
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{
+                        height: isOpen ? 'auto' : 0,
+                        opacity: isOpen ? 1 : 0,
+                      }}
+                      transition={{
+                        height: { duration: 0.5, ease: [0.32, 0.72, 0, 1] },
+                        opacity: { duration: 0.4, delay: isOpen ? 0.1 : 0 },
+                      }}
+                      className="overflow-hidden bg-white rounded-b-2xl shadow-inner"
+                    >
+                      <motion.div 
+                        className="px-8 py-7 text-lg text-[#2d2d2f]/80 leading-relaxed"
+                        initial={{ y: -10 }}
+                        animate={{ y: isOpen ? 0 : -10 }}
+                        transition={{ duration: 0.3, delay: 0.1 }}
+                      >
+                        {faq.answer}
+                      </motion.div>
+                    </motion.div>
+                  </Accordion.Content>
+                </Accordion.Item>
+              </motion.div>
             );
           })}
         </Accordion.Root>
